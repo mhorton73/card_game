@@ -1,0 +1,189 @@
+
+# Future/ potential additions:
+
+# pagination
+# sorting
+# strong filtering
+# versioning
+
+
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy import select, func
+from sqlalchemy.orm import selectinload
+
+from .database import SessionLocal
+from .models import CardSet, Card
+from.schemas import (
+    SetIn, 
+    SetOut, 
+    SetResponse, 
+    SetListResponse, 
+    CardIn, CardOut, 
+    CardResponse, 
+    CardListResponse, 
+    CardPatch
+)
+
+def get_session():
+    session = SessionLocal()
+    try:
+        yield session
+    except Exception:
+        session.rollback()
+        raise
+    finally:
+        session.close()
+
+def serialize_card_set(card_set: CardSet):
+    return SetOut(
+        id = card_set.id,
+        name = card_set.name,
+    )
+
+def serialize_card(card: Card):
+    return CardOut(
+        id = card.id,
+        name = card.name,
+        mana_cost = card.mana_cost,
+        element = card.element,
+        card_types = card.card_types,
+        subtypes = card.subtypes,
+        effect = card.effect,
+        flavour_text = card.flavour_text,
+        attack = card.attack,
+        health = card.health,
+        card_set = serialize_card_set(card.card_set)
+    )
+
+
+router = APIRouter(prefix="/card-editor", tags = ["card-editor"])
+
+
+# -------- Endpoints -------- 
+
+@router.post("/decks", response_model=SetResponse, status_code=201)
+async def add_set(set_in:SetIn, session = Depends(get_session)):
+    new_set = CardSet(
+        name = set_in.name
+    )
+    session.add(new_set)
+    session.commit()
+    session.refresh(new_set)
+    
+    return SetResponse(status="added", data = serialize_card_set(new_set))
+
+@router.post("/cards", response_model=CardResponse, status_code=201) 
+async def add_card(card: CardIn, session = Depends(get_session)): 
+
+    new_card = Card(
+        name = card.name,
+        mana_cost = card.mana_cost,
+        element = card.element,
+        card_types = card.card_types,
+        subtypes = card.subtypes,
+        effect = card.effect,
+        flavour_text = card.flavour_text,
+        attack = card.attack,
+        health = card.health,
+        set_id = card.set_id,
+        ) 
+
+    session.add(new_card)
+    session.commit()
+    session.refresh(new_card)
+
+    return CardResponse(status = "added", data = serialize_card(new_card)) 
+
+@router.get("/sets", response_model=SetListResponse, status_code=200)
+async def get_sets (session = Depends(get_session)):
+    
+    card_sets = session.execute(select(CardSet)).scalars().all()
+    total = len(card_sets)
+    set_list = [
+        serialize_card_set(s) for s in card_sets
+    ]
+
+    return SetListResponse(total = total, card_sets = set_list)
+
+@router.get("/cards", response_model=CardListResponse, status_code=200)
+async def get_cards (set_id: int | None = None, session = Depends(get_session)):
+    
+    stmt = select(Card)
+
+    if set_id is not None:
+        stmt = stmt.where(Card.set_id == set_id)
+
+    cards = session.execute(
+        stmt.options(selectinload(Card.card_set))
+    ).scalars().all()
+    total = session.execute(
+        select(func.count()).select_from(stmt.subquery())
+    ).scalar()
+
+    card_list = [
+        serialize_card(c) for c in cards
+    ]
+
+    return CardListResponse(total = total, cards = card_list)
+
+@router.delete("/sets/{id}", response_model=SetResponse, status_code=200)
+async def delete_set(id: int, session = Depends(get_session)):
+    
+    card_set = session.get(CardSet, id)
+    if card_set is None:
+        raise HTTPException(status_code=404, detail="Set not found")
+
+    deleted_set = serialize_card_set(card_set)
+    session.delete(card_set)
+    session.commit()
+
+    return SetResponse(status="deleted", data = deleted_set)
+
+
+@router.delete("/cards/{id}", response_model=CardResponse, status_code=200)
+async def delete_card(id: int, session = Depends(get_session)):
+
+    card = session.get(Card, id)
+    if card is None:
+        raise HTTPException(status_code=404, detail="Card not found")
+
+    deleted_card = serialize_card(card)
+    session.delete(card)
+    session.commit()
+
+    return CardResponse(status= "deleted", data = deleted_card)
+
+@router.put("/sets/{id}", response_model=SetResponse, status_code=200)
+async def edit_set(id: int, update: SetIn, session = Depends(get_session)):
+    card_set = session.get(CardSet, id)
+    if card_set is None:
+        raise HTTPException(status_code=404, detail="Set not found")
+    
+    card_set.name = update.name
+    session.commit()
+
+    return SetResponse(status="updated", data = serialize_card_set(card_set))
+
+@router.patch("/cards/{id}", response_model=CardResponse, status_code=200)
+async def edit_card(id: int, update: CardPatch, session = Depends(get_session)):
+    
+    card = session.get(Card, id)
+    if card is None:
+        raise HTTPException(status_code=404, detail="Card not found")
+    
+    update_data = update.model_dump(exclude_unset=True)
+
+    if "set_id" in update_data:
+        card_set = session.get(CardSet, update_data["set_id"])
+
+        if card_set is None:
+            raise HTTPException(status_code=404, detail="Set not found")
+        
+
+    for key, value in update_data.items():
+        setattr(card, key, value)
+
+    session.commit()
+    session.refresh(card)
+
+    return CardResponse(status="updated", data = serialize_card(card))
