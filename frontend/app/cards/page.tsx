@@ -13,10 +13,17 @@ export default async function CardsPage() {
         Create a New Card
       </Link>
 
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4 max-w-[1000px]">
         {data.cards.map((card) => (
-          <CardComponent key={card.id} card={card} />
+          <div key={card.id} className="flex flex-col items-center">
+            <CardComponent key={card.id} card={card} />
+            
+            <Link href={`/cards/${card.id}/edit`} className="text-blue-600 hover:underline">
+              Edit
+            </Link>
+          </div>
         ))}
+        
       </div>
     </main>
   )

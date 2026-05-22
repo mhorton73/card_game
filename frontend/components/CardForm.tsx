@@ -1,23 +1,27 @@
 
 "use client";
 import { useState, FormEvent } from "react"
-import { CardSet } from "@/lib/types"
+import { CardSet, Card } from "@/lib/types"
 
 type Props = {
   sets: CardSet[]
+  initialData?: Partial<Card>
+  method?: "POST" | "PATCH"
+  endpoint: string
   successMessage?: string;
 }
 
-export default function CardForm({ sets, successMessage }: Props) {
-  const [name, setName] = useState("")
-  const [cost, setCost] = useState("")
-  const [element, setElement] = useState<string[]>([])
-  const [cardTypes, setCardTypes] = useState<string[]>([])
-  const [subtypes, setSubtypes] = useState<string[]>([])
-  const [effect, setEffect] = useState("")
-  const [flavourText, setFlavourText] = useState("")
-  const [attack, setAttack] = useState<number | "">("")
-  const [health, setHealth] = useState<number | "">("")
+export default function CardForm({ sets, initialData, method, endpoint, successMessage }: Props) {
+  const [name, setName] = useState(initialData?.name ?? "")
+  const [cost, setCost] = useState(initialData?.cost ?? "")
+  const [numericalCost, setNumericalCost] = useState<number | "">(initialData?.numerical_cost ?? "")
+  const [element, setElement] = useState<string[]>(initialData?.element ?? [])
+  const [cardTypes, setCardTypes] = useState<string[]>(initialData?.card_types ?? [])
+  const [subtypes, setSubtypes] = useState<string[]>(initialData?.subtypes ?? [])
+  const [effect, setEffect] = useState(initialData?.effect ?? "")
+  const [flavourText, setFlavourText] = useState(initialData?.flavour_text ?? "")
+  const [attack, setAttack] = useState<number | "">(initialData?.attack ?? "")
+  const [health, setHealth] = useState<number | "">(initialData?.health ?? "")
   const [setId, setSetId] = useState<number>(sets[0]?.id ?? 0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -28,12 +32,13 @@ export default function CardForm({ sets, successMessage }: Props) {
     setError("")
 
     try {
-      const response = await fetch("http://localhost:8000/card-editor/cards", {
-        method: "POST",
+      const response = await fetch(endpoint, {
+        method: method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name,
           cost: cost || null,
+          numerical_cost: numericalCost === "" ? null : numericalCost,
           element,
           card_types: cardTypes,
           subtypes,
@@ -49,17 +54,20 @@ export default function CardForm({ sets, successMessage }: Props) {
         throw new Error("Failed to create card")
       }
 
-      setName("")
-      setCost("")
-      setElement([])
-      setCardTypes([])
-      setSubtypes([])
-      setEffect("")
-      setFlavourText("")
-      setAttack("")
-      setHealth("")
-      setSetId(sets[0]?.id ?? 0)
-
+      if (method === "POST") {
+        setName("")
+        setCost("")
+        setNumericalCost("")
+        setElement([])
+        setCardTypes([])
+        setSubtypes([])
+        setEffect("")
+        setFlavourText("")
+        setAttack("")
+        setHealth("")
+        setSetId(sets[0]?.id ?? 0)
+      }
+      
       if (successMessage) alert(successMessage);
     } catch (err: any) {
       setError(err.message || "Error")
@@ -86,6 +94,15 @@ export default function CardForm({ sets, successMessage }: Props) {
           className="border rounded w-full p-2"
           value={cost}
           onChange={(e) => setCost(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label className="block font-semibold">Numerical Cost</label>
+        <input
+          className="border rounded w-full p-2"
+          value={numericalCost}
+          onChange={(e) => setNumericalCost(e.target.value === "" ? "" : Number(e.target.value))}
         />
       </div>
 

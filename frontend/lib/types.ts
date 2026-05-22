@@ -8,6 +8,7 @@ export type Card = {
   id: number
   name: string
   cost?: string | null
+  numerical_cost?: number | null
   element: string[]
   card_types: string[]
   subtypes: string[]
