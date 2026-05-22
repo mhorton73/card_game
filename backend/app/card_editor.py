@@ -8,7 +8,7 @@
 
 
 from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy import select, func
+from sqlalchemy import select, func, case, asc, Integer
 from sqlalchemy.orm import selectinload
 
 from .database import get_session
@@ -35,6 +35,7 @@ def serialize_card(card: Card):
         id = card.id,
         name = card.name,
         cost = card.cost,
+        numerical_cost= card.numerical_cost,
         element = card.element,
         card_types = card.card_types,
         subtypes = card.subtypes,
@@ -68,6 +69,7 @@ async def add_card(card: CardIn, session = Depends(get_session)):
     new_card = Card(
         name = card.name,
         cost = card.cost,
+        numerical_cost = card.numerical_cost,
         element = card.element,
         card_types = card.card_types,
         subtypes = card.subtypes,
@@ -103,6 +105,26 @@ async def get_cards (set_id: int | None = None, session = Depends(get_session)):
     if set_id is not None:
         stmt = stmt.where(Card.set_id == set_id)
 
+    element_sort = case(
+        (Card.element[0].astext == "Fire", 0),
+        (Card.element[0].astext == "Water", 1),
+        (Card.element[0].astext == "Earth", 2),
+        (Card.element[0].astext == "Air", 3),
+        else_=4,  # empty list or unknown
+    )
+
+    type_sort = case(
+        (Card.card_types[0].astext == "Creature", 0),
+        (Card.card_types[0].astext == "Invocation", 1),
+        (Card.card_types[0].astext == "Surge", 1),
+        (Card.card_types[0].astext == "Catalyst", 2),
+        else_=3,  # empty list or unknown
+    )
+
+    cost_sort = func.coalesce(Card.numerical_cost.cast(Integer), 99)
+
+    stmt = stmt.order_by(element_sort, type_sort, cost_sort)
+
     cards = session.execute(
         stmt.options(selectinload(Card.card_set))
     ).scalars().all()
@@ -115,6 +137,20 @@ async def get_cards (set_id: int | None = None, session = Depends(get_session)):
     ]
 
     return CardListResponse(total = total, cards = card_list)
+
+@router.get("/cards/{id}", response_model=CardOut, status_code=200)
+async def get_card (id: int, session = Depends(get_session)):
+    
+    stmt = select(Card).where(Card.id == id)
+
+    card = session.execute(
+        stmt.options(selectinload(Card.card_set))
+    ).scalars().one_or_none()
+
+    if card is None:
+        raise HTTPException(status_code=404, detial="Card not found")
+
+    return serialize_card(card)
 
 @router.delete("/sets/{id}", response_model=SetResponse, status_code=200)
 async def delete_set(id: int, session = Depends(get_session)):

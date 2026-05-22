@@ -13,6 +13,7 @@ class SetOut(BaseModel):
 class CardIn(BaseModel):
     name: str
     cost: str | None = None
+    numerical_cost: int | None = None
     element: list[str] = Field(default_factory=list)
     card_types: list[str] = Field(default_factory=list)
     subtypes: list[str] = Field(default_factory=list)
@@ -26,6 +27,7 @@ class CardOut(BaseModel):
     id: int
     name: str
     cost: str | None
+    numerical_cost: int | None
     element: list[str] = Field(default_factory=list)
     card_types: list[str] = Field(default_factory=list)
     subtypes: list[str] = Field(default_factory=list)
@@ -54,6 +56,7 @@ class CardListResponse(BaseModel):
 class CardPatch(BaseModel):
     name: str | None = None
     cost: str | None = None
+    numerical_cost: int | None = None
     element: list[str] | None = None
     card_types: list[str] | None = None
     subtypes: list[str] | None = None

@@ -8,11 +8,14 @@ ALLOWED_TYPES = {
     "Catalyst",
     "Creature",
     "Spell",
+    "Invocation",
+    "Surge",
 }
 
 ALLOWED_SUBTYPES = {
     "Dragon",
     "Wolf",
+    "Golem"
 }
 
 ALLOWED_ELEMENTS ={
@@ -39,6 +42,7 @@ class Card(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str]
     cost: Mapped[str | None]
+    numerical_cost: Mapped[int | None]
     element: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
     card_types: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
     subtypes: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
