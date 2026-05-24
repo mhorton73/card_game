@@ -8,12 +8,12 @@
 
 
 from fastapi import APIRouter, HTTPException, Depends
-from sqlalchemy import select, func, case, asc, Integer
+from sqlalchemy import select, func, case, Integer
 from sqlalchemy.orm import selectinload
 
-from .database import get_session
-from .models import CardSet, Card
-from.schemas import (
+from ..database import get_session
+from ..models import CardSet, Card
+from ..schemas import (
     SetIn, 
     SetOut, 
     SetResponse, 
@@ -117,8 +117,9 @@ async def get_cards (set_id: int | None = None, session = Depends(get_session)):
         (Card.card_types[0].astext == "Creature", 0),
         (Card.card_types[0].astext == "Invocation", 1),
         (Card.card_types[0].astext == "Surge", 1),
-        (Card.card_types[0].astext == "Catalyst", 2),
-        else_=3,  # empty list or unknown
+        (Card.card_types[0].astext == "Site", 2),
+        (Card.card_types[0].astext == "Catalyst", 3),
+        else_= 99,  # empty list or unknown
     )
 
     cost_sort = func.coalesce(Card.numerical_cost.cast(Integer), 99)

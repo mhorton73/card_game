@@ -104,3 +104,53 @@ class DeckDetailResponse(BaseModel):
     deck_name: str
     deck_size: int
     cards: list[DeckListElement]
+
+# -------- Engine schemas --------
+
+class CardInstanceOut(BaseModel):
+    instance_id: str
+    owner_id: str
+    card_id: int
+    tapped: bool
+    counters: dict[str, int]
+
+class PlayerStateOut(BaseModel):
+    player_id: str
+    name:str
+
+    life: int = 20
+    mana: dict[str, int] = Field(default_factory=lambda: {
+        "Fire": 0,
+        "Water": 0,
+        "Earth": 0,
+        "Air": 0
+    })
+
+    deck_count: int
+
+    hand: list[CardInstanceOut] = Field(default_factory=list)
+    hand_count: int
+    graveyard: list[CardInstanceOut] = Field(default_factory=list)
+    exile: list[CardInstanceOut] = Field(default_factory=list)
+
+    creatures: list[CardInstanceOut] = Field(default_factory=list)
+    catalysts: list[CardInstanceOut] = Field(default_factory=list)
+    third_layer: list[CardInstanceOut] = Field(default_factory=list)
+    pending: list[CardInstanceOut] = Field(default_factory=list)
+
+class StackItemOut(BaseModel):
+    card: CardInstanceOut
+    controller_id: str
+
+class GameStateOut(BaseModel):
+    game_id: str
+    players: list[PlayerStateOut]
+    game_started: bool
+    turn_number: int
+    # active_player_index: int
+    stack: list[StackItemOut] = Field(default_factory=list)
+
+class JoinGameRequest(BaseModel):
+    game_id: str
+    player_id: str
+    name: str

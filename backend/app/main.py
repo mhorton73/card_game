@@ -2,7 +2,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from . import card_editor, deck_builder
+from .api import card_editor, deck_builder
 
 app = FastAPI() 
 

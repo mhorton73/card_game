@@ -2,9 +2,9 @@ from fastapi import APIRouter, HTTPException, Depends
 from sqlalchemy import select, func
 from sqlalchemy.orm import selectinload
 
-from .database import get_session
-from .models import Card, Deck, DeckCard
-from.schemas import (
+from ..database import get_session
+from ..models import Card, Deck, DeckCard
+from ..schemas import (
     DeckIn,
     DeckOut,
     DeckResponse,

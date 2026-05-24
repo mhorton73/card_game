@@ -10,12 +10,15 @@ ALLOWED_TYPES = {
     "Spell",
     "Invocation",
     "Surge",
+    "Site",
 }
 
 ALLOWED_SUBTYPES = {
     "Dragon",
     "Wolf",
-    "Golem"
+    "Golem",
+    "Resonant",
+    "Ghost",
 }
 
 ALLOWED_ELEMENTS ={
