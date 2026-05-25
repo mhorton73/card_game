@@ -2,7 +2,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import selectinload
 from ..models import Deck
-from objects.card_instance import CardInstance
+from .objects.card_instance import CardInstance
 import uuid
 
 def generate_instance_id() -> str:

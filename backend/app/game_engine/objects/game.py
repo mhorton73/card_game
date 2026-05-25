@@ -2,8 +2,8 @@
 import random
 from datetime import datetime, timezone
 
-from card_instance import CardInstance
-from player import Player
+from .card_instance import CardInstance
+from .player import Player
 
 class Game:
     def __init__(self, game_id: str, name: str | None = None, seed: int | None = None):

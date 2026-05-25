@@ -1,8 +1,8 @@
 
-from objects.game import Game
-from objects.card_instance import CardInstance
-from objects.player import Player
-from objects.stack_item import StackItem
+from .objects.game import Game
+from .objects.card_instance import CardInstance
+from .objects.player import Player
+from .objects.stack_item import StackItem
 from ..schemas import CardInstanceOut, PlayerStateOut, GameStateOut, StackItemOut, GameStateBroadcast
 
 def serialize_card_instance(card: CardInstance):

@@ -1,10 +1,10 @@
 
 import uuid
 
-from objects.game import Game
-from objects.player import Player
-from objects.card_instance import CardInstance
-from objects.stack_item import StackItem
+from .objects.game import Game
+from .objects.player import Player
+from .objects.card_instance import CardInstance
+from .objects.stack_item import StackItem
 from app.schemas import(
     MoveCardRequest,
     DrawCardsRequest,

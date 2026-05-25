@@ -1,7 +1,7 @@
 
-from objects.game import Game
-from objects.player import Player
-from objects.card_instance import CardInstance
+from .objects.game import Game
+from .objects.player import Player
+from .objects.card_instance import CardInstance
 
 class GameManager:
     def __init__(self):

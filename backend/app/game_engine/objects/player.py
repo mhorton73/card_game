@@ -1,7 +1,7 @@
 
 from dataclasses import dataclass, field
 
-from card_instance import CardInstance
+from .card_instance import CardInstance
 
 @dataclass
 class Player:
