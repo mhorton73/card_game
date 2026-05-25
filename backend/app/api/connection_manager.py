@@ -15,7 +15,11 @@ class ConnectionManager:
 
     def disconnect(self, game_id: str, player_id: str):
         self.connections[game_id].pop(player_id, None)
-    
+
+    async def broadcast_event(self, game_id: str, payload: dict):
+        for ws in self.connections[game_id].values():
+            await ws.send_json(payload)
+        
     async def broadcast_gamestate(self, game: Game):
         for player_id, websocket in self.connections[game.game_id].items():
             gamestate = serialize_broadcast(game, player_id)

@@ -156,6 +156,38 @@ class GameStateBroadcast(BaseModel):
 
 class JoinGameRequest(BaseModel):
     game_id: str
-    player_id: str
+    # player_id: str
     name: str
 
+class MoveCardRequest(BaseModel):
+    instance_id: str
+
+    source: str
+    source_owner_id: str
+
+    destination: str
+    destination_owner_id: str
+
+class DrawCardsRequest(BaseModel):
+    player_id: str
+    number: int
+
+class PutInDeckRequest(BaseModel):
+    instance_id: str
+    source: str
+    source_owner_id: str
+
+class DrawFromBottomRequest(BaseModel):
+    player_id: str
+
+class PeekTopNRequest(BaseModel):
+    player_id: str
+    n: int
+
+class AddToStackRequest(BaseModel):
+    player_id:str
+    source: str
+    instance_id: str
+
+class RemoveFromStackRequest(BaseModel):
+    stack_id:str
