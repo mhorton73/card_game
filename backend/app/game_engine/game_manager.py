@@ -29,19 +29,27 @@ class GameManager:
         self.games.pop(game_id)
 
     def join_game(self, game_id: str, player_id: str, name: str):
+        if not self.game_exists(game_id):
+            raise ValueError("Cannot find game") 
         game = self.get_game(game_id)
         player = Player(player_id, name)
         game.add_player(player)
         return game
     
     def assign_deck(self, game_id: str, player_id: str, deck: list[CardInstance]):
+        if not self.game_exists(game_id):
+            raise ValueError("Cannot find game") 
         game = self.get_game(game_id)
-        player = game.get_player(player_id)
+        player = game.players.get(player_id)
+        if player is None:
+            raise ValueError("Player not found")
         player.deck = deck
 
     def start_game(self, game_id: str):
+        if not self.game_exists(game_id):
+            raise ValueError("Cannot find game") 
         game = self.get_game(game_id)
-        for p in game.players:
+        for p in game.players.values():
             game.shuffle_deck(p)
         game.game_started = True
         return game

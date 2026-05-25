@@ -150,7 +150,12 @@ class GameStateOut(BaseModel):
     # active_player_index: int
     stack: list[StackItemOut] = Field(default_factory=list)
 
+class GameStateBroadcast(BaseModel):
+    type: str = "game_state"
+    state: GameStateOut
+
 class JoinGameRequest(BaseModel):
     game_id: str
     player_id: str
     name: str
+

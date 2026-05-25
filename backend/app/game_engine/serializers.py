@@ -3,7 +3,7 @@ from objects.game import Game
 from objects.card_instance import CardInstance
 from objects.player import Player
 from objects.stack_item import StackItem
-from ..schemas import CardInstanceOut, PlayerStateOut, GameStateOut, StackItemOut
+from ..schemas import CardInstanceOut, PlayerStateOut, GameStateOut, StackItemOut, GameStateBroadcast
 
 def serialize_card_instance(card: CardInstance):
     return CardInstanceOut(
@@ -46,8 +46,14 @@ def serialize_stack_item(item: StackItem):
 def serialize_gamestate(game: Game, viewer_id: str):
     return GameStateOut(
         game_id = game.game_id,
-        players = [serialize_player_state(p, viewer_id) for p in game.players],
+        players = [serialize_player_state(p, viewer_id) for p in game.players.values()],
         game_started = game.game_started,
         turn_number = game.turn_number,
         stack = [serialize_stack_item(c) for c in game.stack],
+    )
+
+def serialize_broadcast(game: Game, viewer_id: str):
+    state = serialize_gamestate(game, viewer_id)
+    return GameStateBroadcast(
+        state = state
     )

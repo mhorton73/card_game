@@ -1,5 +1,5 @@
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 @dataclass
 class CardInstance:
@@ -13,7 +13,7 @@ class CardInstance:
     def untap(self):
         self.tapped = False
 
-    counters: dict[str, int] = None
+    counters: dict[str, int] = field(default_factory=dict)
     def add_counter(self, counter_type: str):
         self.counters[counter_type] = self.counters.get(counter_type, 0) + 1
     def remove_counter(self, counter_type: str):
