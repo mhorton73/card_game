@@ -1,14 +1,7 @@
 
 import CardForm from "@/components/CardForm"
-import { CardSet } from "@/lib/types"
+import { getSets } from"@/lib/api"
 import Link from "next/link";
-
-async function getSets(): Promise<CardSet[]> {
-  const res = await fetch("http://localhost:8000/sets")
-  if (!res.ok) throw new Error("Failed to fetch sets")
-  const data = await res.json()
-  return data.card_sets
-}
 
 type Props = {
   searchParams: Promise<{
@@ -32,8 +25,7 @@ export default async function CreateCardPage({
       </Link>
 
       <CardForm 
-        sets={sets}
-        endpoint="http://localhost:8000/cards"
+        sets={sets.card_sets}
         method="POST"
         successMessage="Card created"
       />

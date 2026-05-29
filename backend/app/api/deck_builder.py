@@ -36,6 +36,25 @@ router = APIRouter()
 
 # -------- Endpoints -------- 
 
+@router.get("/decks", response_model=DeckCollectionResponse, status_code=200)
+async def get_decks (session = Depends(get_session)):
+    
+    stmt = (
+        select(Deck, func.coalesce(func.sum(DeckCard.quantity), 0))
+        .outerjoin(DeckCard)
+        .group_by(Deck.id)
+    )
+    
+    rows = session.execute(stmt).all()
+
+    total = session.execute(
+        select(func.count()).select_from(Deck)
+    ).scalar_one()
+
+    return DeckCollectionResponse(
+        total = total,
+        decks = [serialize_deck(deck, size) for deck, size in rows]
+        )
 
 @router.post("/decks", response_model=DeckSummary, status_code=201)
 async def add_deck(deck_in:DeckIn, session = Depends(get_session)):
@@ -48,6 +67,29 @@ async def add_deck(deck_in:DeckIn, session = Depends(get_session)):
     size = sum(c.quantity for c in new_deck.cards)
     
     return serialize_deck(new_deck, size)
+
+@router.put("/decks/{id}", response_model=DeckSummary, status_code=200)
+async def update_deck(id: int, update: DeckIn, session = Depends(get_session)):
+    
+    deck = session.get(Deck, id, options=[selectinload(Deck.cards)])
+    if not deck:
+        raise HTTPException(404, "Deck not found")
+    deck.name = update.name
+    session.commit()
+    session.refresh(deck)
+    size = sum(c.quantity for c in deck.cards)
+
+    return serialize_deck(deck, size)
+
+@router.delete("/decks/{deck_id}", status_code=204)
+async def delete_deck(deck_id: int, session = Depends(get_session)):
+    
+    deck = session.get(Deck, deck_id)
+    if not deck:
+        raise HTTPException(404, "Deck not found")
+
+    session.delete(deck)
+    session.commit()
 
 @router.post("/decks/{deck_id}/cards/{card_id}", response_model=DeckCardOut, status_code=201)
 async def add_deck_card_copy(deck_id: int, card_id: int, session = Depends(get_session)):
@@ -78,16 +120,6 @@ async def add_deck_card_copy(deck_id: int, card_id: int, session = Depends(get_s
     
     return serialize_deck_card(deck_card, deck.name, card.name)
 
-@router.delete("/decks/{deck_id}", status_code=204)
-async def delete_deck(deck_id: int, session = Depends(get_session)):
-    
-    deck = session.get(Deck, deck_id)
-    if not deck:
-        raise HTTPException(404, "Deck not found")
-
-    session.delete(deck)
-    session.commit()
-
 @router.delete("/decks/{deck_id}/cards/{card_id}", response_model=DeckCardOut, status_code=200)
 async def remove_deck_card_copy(deck_id: int, card_id: int, session = Depends(get_session)):
     
@@ -108,26 +140,6 @@ async def remove_deck_card_copy(deck_id: int, card_id: int, session = Depends(ge
     session.commit()
     
     return removed_deck_card
-
-@router.get("/decks", response_model=DeckCollectionResponse, status_code=200)
-async def get_decks (session = Depends(get_session)):
-    
-    stmt = (
-        select(Deck, func.coalesce(func.sum(DeckCard.quantity), 0))
-        .outerjoin(DeckCard)
-        .group_by(Deck.id)
-    )
-    
-    rows = session.execute(stmt).all()
-
-    total = session.execute(
-        select(func.count()).select_from(Deck)
-    ).scalar_one()
-
-    return DeckCollectionResponse(
-        total = total,
-        decks = [serialize_deck(deck, size) for deck, size in rows]
-        )
 
 @router.get("/decks/{id}", response_model=DeckDetailResponse, status_code=200)
 async def get_decklist (id: int, session = Depends(get_session)):
@@ -159,19 +171,6 @@ async def get_decklist (id: int, session = Depends(get_session)):
         deck_size=deck_size,
         cards = deck_list,
     )
-
-@router.put("/decks/{id}", response_model=DeckSummary, status_code=200)
-async def update_deck(id: int, update: DeckIn, session = Depends(get_session)):
-    
-    deck = session.get(Deck, id, options=[selectinload(Deck.cards)])
-    if not deck:
-        raise HTTPException(404, "Deck not found")
-    deck.name = update.name
-    session.commit()
-    session.refresh(deck)
-    size = sum(c.quantity for c in deck.cards)
-
-    return serialize_deck(deck, size)
 
 @router.post("/decks/{id}/clone", response_model=DeckSummary, status_code=201)
 async def clone_deck(id:int, session = Depends(get_session)):

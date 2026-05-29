@@ -1,17 +1,18 @@
 
 "use client";
 import { useState, FormEvent } from "react"
-import { CardSet, Card } from "@/lib/types"
+import { CardSet, CardIn, Card } from "@/lib/types"
+import { createCard, updateCard } from "@/lib/api"
 
 type Props = {
   sets: CardSet[]
   initialData?: Partial<Card>
+  cardId?: number
   method?: "POST" | "PATCH"
-  endpoint: string
   successMessage?: string;
 }
 
-export default function CardForm({ sets, initialData, method, endpoint, successMessage }: Props) {
+export default function CardForm({ sets, initialData, cardId, method, successMessage }: Props) {
   const [name, setName] = useState(initialData?.name ?? "")
   const [cost, setCost] = useState(initialData?.cost ?? "")
   const [numericalCost, setNumericalCost] = useState<number | "">(initialData?.numerical_cost ?? "")
@@ -31,30 +32,23 @@ export default function CardForm({ sets, initialData, method, endpoint, successM
     setLoading(true)
     setError("")
 
+    const payload: CardIn = {
+      name,
+      cost: cost || null,
+      numerical_cost: numericalCost === "" ? null : numericalCost,
+      element,
+      card_types: cardTypes,
+      subtypes,
+      effect: effect || null,
+      flavour_text: flavourText || null,
+      attack: attack === "" ? null : attack,
+      health: health === "" ? null : health,
+      set_id: setId,
+    }
     try {
-      const response = await fetch(endpoint, {
-        method: method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name,
-          cost: cost || null,
-          numerical_cost: numericalCost === "" ? null : numericalCost,
-          element,
-          card_types: cardTypes,
-          subtypes,
-          effect: effect || null,
-          flavour_text: flavourText || null,
-          attack: attack === "" ? null : attack,
-          health: health === "" ? null : health,
-          set_id: setId,
-        }),
-      })
-
-      if (!response.ok) {
-        throw new Error("Failed to create card")
-      }
-
       if (method === "POST") {
+        await createCard(payload)
+
         setName("")
         setCost("")
         setNumericalCost("")
@@ -66,7 +60,10 @@ export default function CardForm({ sets, initialData, method, endpoint, successM
         setAttack("")
         setHealth("")
         setSetId(sets[0]?.id ?? 0)
-      }
+
+      } else {
+        await updateCard(cardId!, payload)
+        }
       
       if (successMessage) alert(successMessage);
     } catch (err: any) {

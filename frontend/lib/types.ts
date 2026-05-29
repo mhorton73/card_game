@@ -4,6 +4,25 @@ export type CardSet = {
   name: string
 }
 
+export type SetListResponse = {
+  total: number
+  card_sets: CardSet[]
+}
+
+export type CardIn ={
+  name: string
+  cost: string | null
+  numerical_cost: number | null
+  element: string[]
+  card_types: string[]
+  subtypes: string[]
+  effect: string | null
+  flavour_text: string | null
+  attack: number | null
+  health: number | null
+  set_id: number
+}
+
 export type Card = {
   id: number
   name: string
@@ -22,6 +41,12 @@ export type Card = {
 export type CardListResponse = {
   total: number
   cards: Card[]
+}
+
+// Deck Builder Types
+
+export type DeckIn = {
+  name: string
 }
 
 export type Deck = {

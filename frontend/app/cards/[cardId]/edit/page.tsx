@@ -1,25 +1,7 @@
 
 import CardForm from "@/components/CardForm"
-import { CardSet } from "@/lib/types"
 import Link from "next/link";
-
-async function getCard(id: string) {
-  const res = await fetch(`http://localhost:8000/cards/${id}`)
-  return res.json()
-}
-
-async function getSets(): Promise<CardSet[]> {
-  const res = await fetch("http://localhost:8000/sets")
-  if (!res.ok) throw new Error("Failed to fetch sets")
-  const data = await res.json()
-  return data.card_sets
-}
-
-type Props = {
-  searchParams: Promise<{
-    returnTo?: string
-  }>
-}
+import { getSets, getCard } from"@/lib/api"
 
 export default async function EditCardPage({
   params,
@@ -33,7 +15,7 @@ export default async function EditCardPage({
   const { returnTo } = await searchParams
 
   const sets = await getSets()
-  const card = await getCard(cardId)
+  const card = await getCard(Number(cardId))
 
   return (
     <main className="p-8">
@@ -44,9 +26,9 @@ export default async function EditCardPage({
       </Link>
 
       <CardForm
-        sets={sets}
+        sets={sets.card_sets}
         initialData={card}
-        endpoint={`http://localhost:8000/cards/${cardId}`}
+        cardId={Number(cardId)}
         method="PATCH"
         successMessage="Card updated!"
       />
