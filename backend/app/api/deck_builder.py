@@ -6,7 +6,7 @@ from ..database import get_session
 from ..models import Card, Deck, DeckCard
 from ..schemas import (
     DeckIn,
-    DeckOut,
+    DeckSummary,
     DeckResponse,
     DeckCollectionResponse,
     DeckCardOut,
@@ -16,10 +16,11 @@ from ..schemas import (
 )
 
 
-def serialize_deck(deck: Deck):
-    return DeckOut(
+def serialize_deck(deck: Deck, size):
+    return DeckSummary(
         id = deck.id,
-        name = deck.name
+        name = deck.name,
+        size= size
     )
 
 def serialize_deck_card(deck_card: DeckCard, deck_name: str, card_name: str):
@@ -46,8 +47,9 @@ async def add_deck(deck_in:DeckIn, session = Depends(get_session)):
     session.add(new_deck)
     session.commit()
     session.refresh(new_deck)
+    size = sum(c.quantity for c in new_deck.cards)
     
-    return DeckResponse(status="added", data = serialize_deck(new_deck))
+    return DeckResponse(status="added", data = serialize_deck(new_deck, size))
 
 @router.post("/decks/{deck_id}/cards/{card_id}", response_model=DeckCardResponse, status_code=201)
 async def add_deck_card_copy(deck_id: int, card_id: int, session = Depends(get_session)):
@@ -87,8 +89,10 @@ async def delete_deck(deck_id: int, session = Depends(get_session)):
     deck = session.get(Deck, deck_id)
     if not deck:
         raise HTTPException(404, "Deck not found")
+    
+    size = sum(c.quantity for c in deck.cards)
+    removed_deck= serialize_deck(deck, size)
 
-    removed_deck= serialize_deck(deck)
     session.delete(deck)
     session.commit()
     
@@ -118,7 +122,13 @@ async def remove_deck_card_copy(deck_id: int, card_id: int, session = Depends(ge
 @router.get("/decks", response_model=DeckCollectionResponse, status_code=200)
 async def get_decks (session = Depends(get_session)):
     
-    decks = session.execute(select(Deck)).scalars().all()
+    stmt = (
+        select(Deck, func.coalesce(func.sum(DeckCard.quantity), 0))
+        .outerjoin(DeckCard)
+        .group_by(Deck.id)
+    )
+    
+    rows = session.execute(stmt).all()
 
     total = session.execute(
         select(func.count()).select_from(Deck)
@@ -126,7 +136,7 @@ async def get_decks (session = Depends(get_session)):
 
     return DeckCollectionResponse(
         total = total,
-        decks = [serialize_deck(d) for d in decks]
+        decks = [serialize_deck(deck, size) for deck, size in rows]
         )
 
 @router.get("/decks/{id}", response_model=DeckDetailResponse, status_code=200)
@@ -163,15 +173,17 @@ async def get_decklist (id: int, session = Depends(get_session)):
 @router.put("/decks/{id}", response_model=DeckResponse, status_code=200)
 async def update_deck(id: int, update: DeckIn, session = Depends(get_session)):
     
-    deck = session.get(Deck, id)
+    deck = session.get(Deck, id, options=[selectinload(Deck.cards)])
     if not deck:
         raise HTTPException(404, "Deck not found")
     deck.name = update.name
     session.commit()
+    session.refresh(deck)
+    size = sum(c.quantity for c in deck.cards)
 
-    return DeckResponse(status="updated", data = serialize_deck(deck))
+    return DeckResponse(status="updated", data = serialize_deck(deck, size))
 
-@router.post("/decks/{id}", response_model=DeckResponse, status_code=201)
+@router.post("/decks/{id}/clone", response_model=DeckResponse, status_code=201)
 async def clone_deck(id:int, session = Depends(get_session)):
     
     deck = session.execute(
@@ -197,5 +209,6 @@ async def clone_deck(id:int, session = Depends(get_session)):
 
     session.commit()
     session.refresh(duplicate_deck)
+    size = sum(c.quantity for c in deck.cards)
     
-    return DeckResponse(status="cloned", data = serialize_deck(duplicate_deck))
+    return DeckResponse(status="cloned", data = serialize_deck(duplicate_deck, size))

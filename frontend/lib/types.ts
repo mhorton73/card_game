@@ -27,6 +27,7 @@ export type CardListResponse = {
 export type Deck = {
   id: number
   name: string
+  size: number
 }
 
 export type DeckListElement = {

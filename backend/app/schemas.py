@@ -71,9 +71,10 @@ class CardPatch(BaseModel):
 class DeckIn(BaseModel):
     name: str
 
-class DeckOut(BaseModel):
+class DeckSummary(BaseModel):
     id: int
     name: str
+    size: int
 
 class DeckCardOut(BaseModel):
     deck_id: int
@@ -84,7 +85,7 @@ class DeckCardOut(BaseModel):
 
 class DeckResponse(BaseModel):
     status: str
-    data: DeckOut
+    data: DeckSummary
 
 class DeckCardResponse(BaseModel):
     status: str
@@ -92,7 +93,7 @@ class DeckCardResponse(BaseModel):
 
 class DeckCollectionResponse(BaseModel):
     total: int
-    decks: list[DeckOut]
+    decks: list[DeckSummary]
 
 class DeckListElement(BaseModel):
     card_id: int
