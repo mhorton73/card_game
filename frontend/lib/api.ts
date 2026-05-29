@@ -1,5 +1,5 @@
 
-import { CardListResponse } from "./types"
+import { CardListResponse, DeckCollectionResponse } from "./types"
 
 const API_BASE = "http://localhost:8000"
 
@@ -9,7 +9,7 @@ export async function getCards(setId?: number): Promise<CardListResponse> {
   if (setId !== undefined) {
     url.searchParams.append("set_id", setId.toString())
   }
-  console.log(url.toString())
+  
   const response = await fetch(url.toString())
 
   if (!response.ok) {
@@ -17,4 +17,11 @@ export async function getCards(setId?: number): Promise<CardListResponse> {
   }
 
   return response.json()
+}
+
+export async function getDecks(): Promise<DeckCollectionResponse>  {
+  const res = await fetch(`${API_BASE}/decks`)
+  if (!res.ok) throw new Error("Failed to fetch decks")
+
+  return res.json()
 }

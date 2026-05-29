@@ -1,6 +1,6 @@
 import { getCards } from "@/lib/api"
-import CardComponent from "@/components/CardComponent"
 import Link from "next/link";
+import CardGallery from "@/components/CardGallery"
 
 export default async function CardsPage() {
   const data = await getCards()
@@ -13,18 +13,7 @@ export default async function CardsPage() {
         Create a New Card
       </Link>
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4 max-w-[1000px]">
-        {data.cards.map((card) => (
-          <div key={card.id} className="flex flex-col items-center">
-            <CardComponent key={card.id} card={card} />
-            
-            <Link href={`/cards/${card.id}/edit?returnTo=/cards`} className="text-blue-600 hover:underline">
-              Edit
-            </Link>
-          </div>
-        ))}
-        
-      </div>
+      <CardGallery cards={data.cards} />
     </main>
   )
 }

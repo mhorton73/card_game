@@ -41,3 +41,8 @@ export type DeckDetail = {
   deck_size: number
   cards: DeckListElement[]
 }
+
+export type DeckCollectionResponse = {
+  total: number
+  decks: Deck[]
+}
