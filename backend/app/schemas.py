@@ -37,14 +37,6 @@ class CardOut(BaseModel):
     health: int | None
     card_set: SetOut
 
-class SetResponse(BaseModel):
-    status: str
-    data: SetOut
-
-class CardResponse(BaseModel):
-    status: str
-    data: CardOut
-
 class SetListResponse(BaseModel):
     total: int
     card_sets: list[SetOut]
@@ -82,14 +74,6 @@ class DeckCardOut(BaseModel):
     card_id: int
     card_name: str
     quantity: int
-
-class DeckResponse(BaseModel):
-    status: str
-    data: DeckSummary
-
-class DeckCardResponse(BaseModel):
-    status: str
-    data: DeckCardOut
 
 class DeckCollectionResponse(BaseModel):
     total: int

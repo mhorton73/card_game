@@ -7,10 +7,8 @@ from ..models import Card, Deck, DeckCard
 from ..schemas import (
     DeckIn,
     DeckSummary,
-    DeckResponse,
     DeckCollectionResponse,
     DeckCardOut,
-    DeckCardResponse,
     DeckListElement,
     DeckDetailResponse,
 )
@@ -39,7 +37,7 @@ router = APIRouter()
 # -------- Endpoints -------- 
 
 
-@router.post("/decks", response_model=DeckResponse, status_code=201)
+@router.post("/decks", response_model=DeckSummary, status_code=201)
 async def add_deck(deck_in:DeckIn, session = Depends(get_session)):
     new_deck = Deck(
         name = deck_in.name
@@ -49,9 +47,9 @@ async def add_deck(deck_in:DeckIn, session = Depends(get_session)):
     session.refresh(new_deck)
     size = sum(c.quantity for c in new_deck.cards)
     
-    return DeckResponse(status="added", data = serialize_deck(new_deck, size))
+    return serialize_deck(new_deck, size)
 
-@router.post("/decks/{deck_id}/cards/{card_id}", response_model=DeckCardResponse, status_code=201)
+@router.post("/decks/{deck_id}/cards/{card_id}", response_model=DeckCardOut, status_code=201)
 async def add_deck_card_copy(deck_id: int, card_id: int, session = Depends(get_session)):
     
     deck = session.get(Deck, deck_id)
@@ -78,27 +76,19 @@ async def add_deck_card_copy(deck_id: int, card_id: int, session = Depends(get_s
     session.commit()
     session.refresh(deck_card)
     
-    return DeckCardResponse(
-        status="added", 
-        data = serialize_deck_card(deck_card, deck.name, card.name)
-    )
+    return serialize_deck_card(deck_card, deck.name, card.name)
 
-@router.delete("/decks/{deck_id}", response_model=DeckResponse, status_code=200)
+@router.delete("/decks/{deck_id}", status_code=204)
 async def delete_deck(deck_id: int, session = Depends(get_session)):
     
     deck = session.get(Deck, deck_id)
     if not deck:
         raise HTTPException(404, "Deck not found")
-    
-    size = sum(c.quantity for c in deck.cards)
-    removed_deck= serialize_deck(deck, size)
 
     session.delete(deck)
     session.commit()
-    
-    return DeckResponse(status="removed", data = removed_deck)
 
-@router.delete("/decks/{deck_id}/cards/{card_id}", response_model=DeckCardResponse, status_code=200)
+@router.delete("/decks/{deck_id}/cards/{card_id}", response_model=DeckCardOut, status_code=200)
 async def remove_deck_card_copy(deck_id: int, card_id: int, session = Depends(get_session)):
     
     deck_card = session.execute(
@@ -117,7 +107,7 @@ async def remove_deck_card_copy(deck_id: int, card_id: int, session = Depends(ge
 
     session.commit()
     
-    return DeckCardResponse(status="removed", data = removed_deck_card)
+    return removed_deck_card
 
 @router.get("/decks", response_model=DeckCollectionResponse, status_code=200)
 async def get_decks (session = Depends(get_session)):
@@ -170,7 +160,7 @@ async def get_decklist (id: int, session = Depends(get_session)):
         cards = deck_list,
     )
 
-@router.put("/decks/{id}", response_model=DeckResponse, status_code=200)
+@router.put("/decks/{id}", response_model=DeckSummary, status_code=200)
 async def update_deck(id: int, update: DeckIn, session = Depends(get_session)):
     
     deck = session.get(Deck, id, options=[selectinload(Deck.cards)])
@@ -181,9 +171,9 @@ async def update_deck(id: int, update: DeckIn, session = Depends(get_session)):
     session.refresh(deck)
     size = sum(c.quantity for c in deck.cards)
 
-    return DeckResponse(status="updated", data = serialize_deck(deck, size))
+    return serialize_deck(deck, size)
 
-@router.post("/decks/{id}/clone", response_model=DeckResponse, status_code=201)
+@router.post("/decks/{id}/clone", response_model=DeckSummary, status_code=201)
 async def clone_deck(id:int, session = Depends(get_session)):
     
     deck = session.execute(
@@ -211,4 +201,4 @@ async def clone_deck(id:int, session = Depends(get_session)):
     session.refresh(duplicate_deck)
     size = sum(c.quantity for c in deck.cards)
     
-    return DeckResponse(status="cloned", data = serialize_deck(duplicate_deck, size))
+    return serialize_deck(duplicate_deck, size)

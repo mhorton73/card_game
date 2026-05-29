@@ -6,13 +6,13 @@ export default async function DecksPage() {
     const data = await getDecks()
     return (
         <main className="p-8">
-            <h1 className="text=3x1 font-bold mb-6">Decks</h1>
+            <h1 className="text-3x1 font-bold mb-6">Decks</h1>
 
             {/* Create deck*/}
             <Link href="decks/new" className="text-blue-600 hover:underline">
                 Create New Deck
             </Link>
-             <div className="mt-6 grid gap-4 max-w-[600px]">
+             <div className="mt-6 grid gap-4 max-w-[600px] mx-auto">
         {data.decks.map((deck) => (
           <div
             key={deck.id}
@@ -27,14 +27,6 @@ export default async function DecksPage() {
               >
                 View
               </Link>
-
-              <Link
-                href={`/decks/${deck.id}/edit?returnTo=/decks`}
-                className="text-green-600 hover:underline"
-              >
-                Edit
-              </Link>
-
             </div>
           </div>
         ))}

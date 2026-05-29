@@ -14,12 +14,9 @@ from sqlalchemy.orm import selectinload
 from ..database import get_session
 from ..models import CardSet, Card
 from ..schemas import (
-    SetIn, 
-    SetOut, 
-    SetResponse, 
+    SetIn, SetOut,
     SetListResponse, 
     CardIn, CardOut, 
-    CardResponse, 
     CardListResponse, 
     CardPatch
 )
@@ -52,7 +49,7 @@ router = APIRouter()
 
 # -------- Endpoints -------- 
 
-@router.post("/sets", response_model=SetResponse, status_code=201)
+@router.post("/sets", response_model=SetOut, status_code=201)
 async def add_set(set_in:SetIn, session = Depends(get_session)):
     new_set = CardSet(
         name = set_in.name
@@ -61,9 +58,9 @@ async def add_set(set_in:SetIn, session = Depends(get_session)):
     session.commit()
     session.refresh(new_set)
     
-    return SetResponse(status="added", data = serialize_card_set(new_set))
+    return serialize_card_set(new_set)
 
-@router.post("/cards", response_model=CardResponse, status_code=201) 
+@router.post("/cards", response_model=CardOut, status_code=201) 
 async def add_card(card: CardIn, session = Depends(get_session)): 
 
     new_card = Card(
@@ -84,7 +81,7 @@ async def add_card(card: CardIn, session = Depends(get_session)):
     session.commit()
     session.refresh(new_card)
 
-    return CardResponse(status = "added", data = serialize_card(new_card)) 
+    return serialize_card(new_card)
 
 @router.get("/sets", response_model=SetListResponse, status_code=200)
 async def get_sets (session = Depends(get_session)):
@@ -157,34 +154,29 @@ async def get_card (id: int, session = Depends(get_session)):
 
     return serialize_card(card)
 
-@router.delete("/sets/{id}", response_model=SetResponse, status_code=200)
+@router.delete("/sets/{id}", status_code=204)
 async def delete_set(id: int, session = Depends(get_session)):
     
     card_set = session.get(CardSet, id)
     if card_set is None:
         raise HTTPException(status_code=404, detail="Set not found")
 
-    deleted_set = serialize_card_set(card_set)
     session.delete(card_set)
     session.commit()
 
-    return SetResponse(status="deleted", data = deleted_set)
 
 
-@router.delete("/cards/{id}", response_model=CardResponse, status_code=200)
+@router.delete("/cards/{id}", status_code=204)
 async def delete_card(id: int, session = Depends(get_session)):
 
     card = session.get(Card, id)
     if card is None:
         raise HTTPException(status_code=404, detail="Card not found")
 
-    deleted_card = serialize_card(card)
     session.delete(card)
     session.commit()
 
-    return CardResponse(status= "deleted", data = deleted_card)
-
-@router.put("/sets/{id}", response_model=SetResponse, status_code=200)
+@router.put("/sets/{id}", response_model=SetOut, status_code=200)
 async def edit_set(id: int, update: SetIn, session = Depends(get_session)):
     card_set = session.get(CardSet, id)
     if card_set is None:
@@ -193,9 +185,9 @@ async def edit_set(id: int, update: SetIn, session = Depends(get_session)):
     card_set.name = update.name
     session.commit()
 
-    return SetResponse(status="updated", data = serialize_card_set(card_set))
+    return serialize_card_set(card_set)
 
-@router.patch("/cards/{id}", response_model=CardResponse, status_code=200)
+@router.patch("/cards/{id}", response_model=CardOut, status_code=200)
 async def edit_card(id: int, update: CardPatch, session = Depends(get_session)):
     
     card = session.get(Card, id)
@@ -217,4 +209,4 @@ async def edit_card(id: int, update: CardPatch, session = Depends(get_session)):
     session.commit()
     session.refresh(card)
 
-    return CardResponse(status="updated", data = serialize_card(card))
+    return serialize_card(card)

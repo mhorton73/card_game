@@ -30,6 +30,14 @@ export type Deck = {
   size: number
 }
 
+export type DeckCard = {
+  deck_id: number
+  deck_name: string
+  card_id: number
+  card_name: string
+  quantity: number
+}
+
 export type DeckListElement = {
   card_id: number
   card_name: string
