@@ -89,7 +89,7 @@ async def select_deck(deck_id: int, game_id: str, player_id: str, session = Depe
     return{"status": "Deck Assigned"}
 
 
-@router.post("/games/{game_id}/move-card")
+@router.post("/games/{game_id}/actions/move-card")
 async def move_card(game_id: str, req: MoveCardRequest):
 
     game = GAME_MANAGER.get_game(game_id)
@@ -98,7 +98,7 @@ async def move_card(game_id: str, req: MoveCardRequest):
 
     return {"status": "ok"}
 
-@router.post("/games/{game_id}/draw-cards")
+@router.post("/games/{game_id}/actions/draw-cards")
 async def draw_cards(game_id: str, req: DrawCardsRequest):
 
     game = GAME_MANAGER.get_game(game_id)
@@ -107,7 +107,7 @@ async def draw_cards(game_id: str, req: DrawCardsRequest):
 
     return {"status": "ok"}
 
-@router.post("/games/{game_id}/put-on-top")
+@router.post("/games/{game_id}/actions/put-on-top")
 async def put_on_top(game_id: str, req: PutInDeckRequest):
 
     game = GAME_MANAGER.get_game(game_id)
@@ -116,7 +116,7 @@ async def put_on_top(game_id: str, req: PutInDeckRequest):
 
     return {"status": "ok"}
 
-@router.post("/games/{game_id}/put-on-bottom")
+@router.post("/games/{game_id}/actions/put-on-bottom")
 async def put_on_bottom(game_id: str, req: PutInDeckRequest):
 
     game = GAME_MANAGER.get_game(game_id)
@@ -125,7 +125,7 @@ async def put_on_bottom(game_id: str, req: PutInDeckRequest):
 
     return {"status": "ok"}
 
-@router.post("/games/{game_id}/draw-from-bottom")
+@router.post("/games/{game_id}/actions/draw-from-bottom")
 async def draw_from_bottom(game_id: str, req: DrawFromBottomRequest):
 
     game = GAME_MANAGER.get_game(game_id)
@@ -134,18 +134,29 @@ async def draw_from_bottom(game_id: str, req: DrawFromBottomRequest):
 
     return {"status": "ok"}
 
-@router.post("/games/{game_id}/peek-top-n")
+@router.post("/games/{game_id}/actions/peek-top-n")
 async def peek_top_n(game_id: str, req: PeekTopNRequest):
 
     game = GAME_MANAGER.get_game(game_id)
     cards = peek_top_n_action(game, req)
     serialized = [serialize_card_instance(c) for c in cards]
+
+    # Let people know that the player is peeking
+    await CONNECTION_MANAGER.broadcast_event(
+        game_id,
+        {
+            "type": "peek_top_n",
+            "player_id": req.player_id,
+            "count": req.count,
+        }
+    )
+
     return {
         "status": "ok",
         "cards": serialized
     }
 
-@router.post("/games/{game_id}/coin-flip")
+@router.post("/games/{game_id}/actions/coin-flip")
 async def coin_flip_route(game_id: str):
 
     game = GAME_MANAGER.get_game(game_id)
@@ -162,7 +173,7 @@ async def coin_flip_route(game_id: str):
 
     return {"result": result}
 
-@router.post("/games/{game_id}/add-to-stack")
+@router.post("/games/{game_id}/actions/add-to-stack")
 async def add_to_stack(game_id: str, req:AddToStackRequest):
 
     game = GAME_MANAGER.get_game(game_id)
@@ -171,7 +182,7 @@ async def add_to_stack(game_id: str, req:AddToStackRequest):
 
     return {"status": "ok"}
 
-@router.post("/games/{game_id}/remove-from-stack")
+@router.post("/games/{game_id}/actions/remove-from-stack")
 async def remove_from_stack(game_id: str, req:RemoveFromStackRequest):
 
     game = GAME_MANAGER.get_game(game_id)

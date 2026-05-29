@@ -2,7 +2,7 @@
 import random
 from datetime import datetime, timezone
 
-from .card_instance import CardInstance
+from .stack_item import StackItem
 from .player import Player
 
 class Game:
@@ -15,7 +15,7 @@ class Game:
         self.players: dict[str, Player]
         self.max_players = 2
 
-        self.stack: list[CardInstance] = []
+        self.stack: list[StackItem] = []
         
         self.game_started = False
         self.turn_number = 1

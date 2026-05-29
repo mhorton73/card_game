@@ -47,7 +47,7 @@ def serialize_card(card: Card):
     )
 
 
-router = APIRouter(prefix="/card-editor", tags = ["card-editor"])
+router = APIRouter()
 
 
 # -------- Endpoints -------- 
@@ -105,6 +105,8 @@ async def get_cards (set_id: int | None = None, session = Depends(get_session)):
     if set_id is not None:
         stmt = stmt.where(Card.set_id == set_id)
 
+    # Sorting
+
     element_sort = case(
         (Card.element[0].astext == "Fire", 0),
         (Card.element[0].astext == "Water", 1),
@@ -125,6 +127,8 @@ async def get_cards (set_id: int | None = None, session = Depends(get_session)):
     cost_sort = func.coalesce(Card.numerical_cost.cast(Integer), 99)
 
     stmt = stmt.order_by(element_sort, type_sort, cost_sort)
+
+    # Finish DB query
 
     cards = session.execute(
         stmt.options(selectinload(Card.card_set))

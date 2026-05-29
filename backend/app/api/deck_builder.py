@@ -32,7 +32,7 @@ def serialize_deck_card(deck_card: DeckCard, deck_name: str, card_name: str):
     )
 
 
-router = APIRouter(prefix="/deck-builder", tags = ["deck-builder"])
+router = APIRouter()
 
 
 # -------- Endpoints -------- 

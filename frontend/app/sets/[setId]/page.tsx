@@ -2,14 +2,23 @@ import { getCards } from "@/lib/api"
 import CardComponent from "@/components/CardComponent"
 import Link from "next/link";
 
-export default async function CardsPage() {
-  const data = await getCards()
+type Props = {
+  params: Promise<{
+    setId: string
+  }>
+}
+
+
+export default async function CardsBySetPage({ params }:Props) {
+  
+  const { setId } = await params
+  const data = await getCards(Number(setId))
 
   return (
     <main className="p-8">
       <h1 className="text-3xl font-bold mb-6">Cards</h1>
 
-      <Link href="/cards/new?returnTo=/cards" className="text-blue-600 hover:underline">
+      <Link href={`/cards/new?returnTo=/sets/${setId}`} className="text-blue-600 hover:underline">
         Create a New Card
       </Link>
 
@@ -18,7 +27,7 @@ export default async function CardsPage() {
           <div key={card.id} className="flex flex-col items-center">
             <CardComponent key={card.id} card={card} />
             
-            <Link href={`/cards/${card.id}/edit?returnTo=/cards`} className="text-blue-600 hover:underline">
+            <Link href={`/cards/${card.id}/edit?returnTo=/sets/${setId}`} className="text-blue-600 hover:underline">
               Edit
             </Link>
           </div>
