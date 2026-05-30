@@ -140,9 +140,12 @@ class GameStateBroadcast(BaseModel):
     state: GameStateOut
 
 class JoinGameRequest(BaseModel):
-    game_id: str
     # player_id: str
     name: str
+
+class SelectDeckRequest(BaseModel):
+    player_id: str
+    deck_id: int
 
 class BasicCardActionRequest(BaseModel):
     instance_id: str

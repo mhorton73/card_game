@@ -9,6 +9,7 @@ from app.game_engine.serializers import serialize_card_instance
 from ..database import get_session
 from ..schemas import (
     JoinGameRequest,
+    SelectDeckRequest,
     MoveCardRequest,
     DrawCardsRequest,
     BasicCardActionRequest,
@@ -92,11 +93,11 @@ async def create_game_route():
         "status": "created"
     }
 
-@router.post("/games/join", status_code=200)
-async def join_game_route(req: JoinGameRequest):
+@router.post("/games/{game_id}/join", status_code=200)
+async def join_game_route(game_id: str, req: JoinGameRequest):
     player_id = str(uuid.uuid4())
     game = GAME_MANAGER.join_game(
-        req.game_id,
+        game_id,
         player_id,
         req.name
     )
@@ -111,15 +112,15 @@ async def join_game_route(req: JoinGameRequest):
         ]
     }
 
-@router.post("/select-deck", status_code=200)
-async def select_deck(deck_id: int, game_id: str, player_id: str, session = Depends(get_session)):
+@router.post("/games/{game_id}/select-deck", status_code=200)
+async def select_deck(game_id: str, req : SelectDeckRequest, session = Depends(get_session)):
 
     try:
-        deck = load_deck(deck_id, player_id, session)
+        deck = load_deck(req.deck_id, req.player_id, session)
     except Exception:
         raise HTTPException(status_code=404, detail="Deck not found")
     
-    GAME_MANAGER.assign_deck(game_id, player_id, deck)
+    GAME_MANAGER.assign_deck(game_id, req.player_id, deck)
 
     return{"status": "Deck Assigned"}
 
@@ -153,7 +154,6 @@ async def put_on_bottom(game_id: str, req: BasicCardActionRequest):
 async def draw_from_bottom(game_id: str, req: DrawFromBottomRequest):
 
     run_game_action(game_id, draw_from_bottom_action, request = req)
-
     return {"status": "ok"}
 
 @router.post("/games/{game_id}/actions/peek-top-n", status_code=200)
@@ -196,7 +196,6 @@ async def coin_flip_route(game_id: str):
 async def add_to_stack(game_id: str, req:AddToStackRequest):
 
     run_game_action(game_id, add_to_stack_action, request = req)
-
     return {"status": "ok"}
 
 @router.post("/games/{game_id}/actions/remove-from-stack", status_code=200)
