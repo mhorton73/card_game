@@ -14,8 +14,13 @@ class CardInstance:
         self.tapped = False
 
     counters: dict[str, int] = field(default_factory=dict)
+    def num_counters(self, counter_type: str):
+        return self.counters.get(counter_type, 0)
     def add_counter(self, counter_type: str):
         self.counters[counter_type] = self.counters.get(counter_type, 0) + 1
     def remove_counter(self, counter_type: str):
         current = self.counters.get(counter_type, 0)
-        self.counters[counter_type] = max(0, current - 1)
+        if current <= 1:
+            self.counters.pop(counter_type, None)
+        else:
+            self.counters[counter_type] = current - 1

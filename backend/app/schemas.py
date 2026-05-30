@@ -144,23 +144,21 @@ class JoinGameRequest(BaseModel):
     # player_id: str
     name: str
 
-class MoveCardRequest(BaseModel):
+class BasicCardActionRequest(BaseModel):
     instance_id: str
-
     source: str
     source_owner_id: str
 
+class CardCountersRequest(BasicCardActionRequest):
+    counter_type: str
+
+class MoveCardRequest(BasicCardActionRequest):
     destination: str
     destination_owner_id: str
 
 class DrawCardsRequest(BaseModel):
     player_id: str
     number: int
-
-class PutInDeckRequest(BaseModel):
-    instance_id: str
-    source: str
-    source_owner_id: str
 
 class DrawFromBottomRequest(BaseModel):
     player_id: str
@@ -176,3 +174,16 @@ class AddToStackRequest(BaseModel):
 
 class RemoveFromStackRequest(BaseModel):
     stack_id:str
+
+class PlayerActionRequest(BaseModel):
+    player_id: str
+
+class ChangeLifeRequest(PlayerActionRequest):
+    amount: int
+
+class SetLifeRequest(PlayerActionRequest):
+    life: int
+
+class ChangeManaRequest(PlayerActionRequest):
+    element: str
+    amount: int

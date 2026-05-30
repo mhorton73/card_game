@@ -20,7 +20,7 @@ export default function DeckList({ cards, deckSize, onAdd, onRemove }: Props) {
   return (
     <div className="border rounded-lg overflow-hidden">
       <div className="bg-gray-100 px-4 py-2 font-semibold text-sm">
-        Deck Cards ({deckSize})
+        Cards: ({deckSize})
       </div>
 
       <ul className="divide-y">
@@ -34,7 +34,7 @@ export default function DeckList({ cards, deckSize, onAdd, onRemove }: Props) {
 
 
             {/* Quantity + controls */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 shrink-0">
               <span className="text-sm font-semibold">
                 x{card.quantity}
               </span>
@@ -42,7 +42,7 @@ export default function DeckList({ cards, deckSize, onAdd, onRemove }: Props) {
               {onRemove && (
                 <button
                   onClick={() => onRemove(card.card_id)}
-                  className="px-2 py-1 text-xs border rounded hover:bg-red-50 text-red-600"
+                  className="w-8 h-8 flex items-center justify-center text-sm border rounded hover:bg-red-50 text-red-600 leading-none"
                 >
                   −
                 </button>
@@ -51,9 +51,9 @@ export default function DeckList({ cards, deckSize, onAdd, onRemove }: Props) {
               {onAdd && (
                 <button
                   onClick={() => onAdd(card.card_id)}
-                  className="px-2 py-1 text-xs border rounded hover:bg-green-50 text-green-600"
+                  className="w-8 h-8 flex items-center justify-center text-sm border rounded hover:bg-green-50 text-green-600 leading-none"
                 >
-                  +
+                   +
                 </button>
               )}
             </div>

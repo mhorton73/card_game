@@ -8,10 +8,16 @@ from .objects.stack_item import StackItem
 from app.schemas import(
     MoveCardRequest,
     DrawCardsRequest,
-    PutInDeckRequest,
+    DrawFromBottomRequest,
+    BasicCardActionRequest,
     PeekTopNRequest,
     AddToStackRequest,
     RemoveFromStackRequest,
+    CardCountersRequest,
+    PlayerActionRequest,
+    ChangeLifeRequest,
+    SetLifeRequest,
+    ChangeManaRequest,
 )
 
 VALID_ZONES = {
@@ -49,15 +55,26 @@ def resolve_card(zone: list[CardInstance], instance_id: str):
     
     return card
 
+def resolve_zone_context(game: Game, zone_owner_id: str, zone_name: str):
+    zone_owner = resolve_player(game, zone_owner_id)
+    zone = resolve_zone(zone_owner, zone_name)
+
+    return zone_owner, zone
+
+def resolve_card_context(game: Game, source_owner_id: str, source: str, instance_id: str):
+    source_owner, source_zone = resolve_zone_context(game, source_owner_id, source)
+    card = resolve_card(source_zone, instance_id)
+
+    return source_owner, source_zone, card
+
+
+
 # -------- Game actions --------
 
 def move_card(game: Game, req:MoveCardRequest):
-    source_owner = resolve_player(game, req.source_owner_id)
-    source_zone = resolve_zone(source_owner, req.source)
-    card = resolve_card(source_zone, req.instance_id)
+    _, source_zone, card = resolve_card_context(game, req.source_owner_id, req.source, req.instance_id)
     
-    destination_owner = resolve_player(game, req.destination_owner_id)
-    destination_zone = resolve_zone(destination_owner, req.destination)
+    _, destination_zone = resolve_zone_context(game, req.destination_owner_id, req.destination)
     
     source_zone.remove(card)
     destination_zone.append(card)
@@ -71,26 +88,20 @@ def draw_cards(game: Game, req: DrawCardsRequest):
         card = player.deck.pop()
         player.hand.append(card)
 
-def put_on_top(game: Game, req:PutInDeckRequest):
-    source_owner = resolve_player(game, req.source_owner_id)
-    source_zone = resolve_zone(source_owner, req.source)
-    card = resolve_card(source_zone, req.instance_id)
-    card_owner = resolve_player(game, card.owner_id)
-    deck = resolve_zone(card_owner, "deck")
+def put_on_top(game: Game, req:BasicCardActionRequest):
+    _, source_zone, card = resolve_card_context(game, req.source_owner_id, req.source, req.instance_id)
+    _, deck  = resolve_zone_context(game, card.owner_id, "deck")
     source_zone.remove(card)
     deck.append(card)
 
-def put_on_bottom(game: Game, req:PutInDeckRequest):
-    source_owner = resolve_player(game, req.source_owner_id)
-    source_zone = resolve_zone(source_owner, req.source)
-    card = resolve_card(source_zone, req.instance_id)
-    card_owner = resolve_player(game, card.owner_id)
-    deck = resolve_zone(card_owner, "deck")
+def put_on_bottom(game: Game, req:BasicCardActionRequest):
+    _, source_zone, card = resolve_card_context(game, req.source_owner_id, req.source, req.instance_id)
+    _, deck  = resolve_zone_context(game, card.owner_id, "deck")
     source_zone.remove(card)
     deck.insert(0, card)
 
-def draw_from_bottom(game: Game, player_id: str):
-    player = resolve_player(game, player_id)
+def draw_from_bottom(game: Game, req: DrawFromBottomRequest):
+    player = resolve_player(game, req.player_id)
     
     if not player.deck:
         return
@@ -122,9 +133,7 @@ def coin_flip(game: Game):
 #     return random.choice(["heads", "tails"])
 
 def add_to_stack(game: Game, req: AddToStackRequest):
-    player = resolve_player(game, req.player_id)
-    source_zone = resolve_zone(player, req.source)
-    card = resolve_card(source_zone, req.instance_id)
+    _, _, card = resolve_card_context(game, req.source_owner_id, req.source, req.instance_id)
     stack_id = str(uuid.uuid4())
     stack_item = StackItem(
         stack_id = stack_id,
@@ -142,3 +151,35 @@ def remove_from_stack(game: Game, req: RemoveFromStackRequest):
         raise ValueError("Stack item not in stack")
     
     game.stack.remove(stack_item)
+
+def tap_card(game: Game, req: BasicCardActionRequest):
+    _, _, card = resolve_card_context(game, req.source_owner_id, req.source, req.instance_id)
+    card.tap()
+
+def untap_card(game: Game, req: BasicCardActionRequest):
+    _, _, card = resolve_card_context(game, req.source_owner_id, req.source, req.instance_id)
+    card.untap()
+
+def add_counter(game: Game, req: CardCountersRequest):
+    _, _, card = resolve_card_context(game, req.source_owner_id, req.source, req.instance_id)
+    card.add_counter(req.counter_type)
+
+def remove_counter(game: Game, req: CardCountersRequest):
+    _, _, card = resolve_card_context(game, req.source_owner_id, req.source, req.instance_id)
+    card.remove_counter(req.counter_type)
+
+def change_life(game: Game, req: ChangeLifeRequest):
+    player = resolve_player(game, req.player_id)
+    player.change_life(req.amount)
+
+def set_life(game: Game, req: SetLifeRequest):
+    player = resolve_player(game, req.player_id)
+    player.set_life(req.life)
+
+def change_mana(game: Game, req: ChangeManaRequest):
+    player = resolve_player(game, req.player_id)
+    player.change_mana(req.element, req.amount)
+
+def clear_mana(game: Game, req: PlayerActionRequest):
+    player = resolve_player(game, req.player_id)
+    player.clear_mana()
