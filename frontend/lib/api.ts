@@ -7,9 +7,39 @@ import {
   DeckCollectionResponse,
   DeckCard,
   DeckDetail,
+  GameLobbyListing,
+  CreateGameResponse,
+  MoveCardRequest,
+  DrawCardsRequest,
+  BasicCardActionRequest,
+  DrawFromBottomRequest,
+  PeekTopNRequest,
+  AddToStackRequest,
+  RemoveFromStackRequest,
+  CardCountersRequest,
+  PlayerActionRequest,
+  ChangeLifeRequest,
+  SetLifeRequest,
+  ChangeManaRequest,
+  CardInstanceOut,
+  JoinGameRequest
 } from "./types"
 
 const API_BASE = "http://localhost:8000"
+
+async function callGameAction(url:string, body: unknown): Promise<void> {
+  const res = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  })
+
+  if (!res.ok) {
+    throw new Error("Request failed")
+  }
+}
 
 // Card Editor API calls
 
@@ -146,4 +176,131 @@ export async function cloneDeck(deckId: number): Promise<Deck> {
   }
 
   return res.json()
+}
+
+// Game Lobby API calls
+
+export async function listGames(): Promise<GameLobbyListing[]>  {
+  const res = await fetch(`${API_BASE}/games`)
+  if (!res.ok) throw new Error("Failed to fetch games")
+
+  return res.json()
+}
+
+export async function createGame(): Promise<string> {
+  const res = await fetch(`${API_BASE}/games/create`, {
+    method: "POST"
+  })
+
+  if (!res.ok) {
+    throw new Error("Failed to create game")
+  }
+
+  const data: CreateGameResponse = await res.json()
+
+  return data.game_id
+}
+
+export async function joinGame(gameId: string, req: JoinGameRequest): Promise<string> {
+  const res = await fetch(`${API_BASE}/games/${gameId}/join`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(req),
+  })
+
+  if (!res.ok) {
+    throw new Error("Failed to join game")
+  }
+
+  const data: CreateGameResponse = await res.json()
+
+  return data.game_id
+}
+
+// Game Route API calls
+
+export function moveCard(gameId: string, req: MoveCardRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/move-card`, req)
+}
+
+export function drawCards(gameId: string, req: DrawCardsRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/draw-cards`, req)
+}
+
+export function putOnTop(gameId: string, req: BasicCardActionRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/put-on-top`, req)
+}
+
+export function putOnBottom(gameId: string, req: BasicCardActionRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/put-on-bottom`, req)
+}
+
+export function drawFromBottom(gameId: string, req: DrawFromBottomRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/draw-from-bottom`, req)
+}
+
+export async function peekTopN(gameId: string, req: PeekTopNRequest): Promise<CardInstanceOut[]> {
+  const res = await fetch(`${API_BASE}/games/${gameId}/actions/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(req),
+  })
+
+  if (!res.ok) {
+    throw new Error("Request failed")
+  }
+  return res.json()
+}
+
+export async function coinFlip(gameId: string): Promise<boolean> {
+  const res = await fetch(`${API_BASE}/games/${gameId}/actions/coin-flip`, {
+    method: "POST"
+  })
+
+  if (!res.ok) {
+    throw new Error("Request failed")
+  }
+  return res.json()
+}
+
+export function addToStack(gameId: string, req: AddToStackRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/add-to-stack`, req)
+}
+
+export function removeFromStack(gameId: string, req: RemoveFromStackRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/remove-from-stack`, req)
+}
+
+export function tapCard(gameId: string, req: BasicCardActionRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/tap-card`, req)
+}
+
+export function untapCard(gameId: string, req: BasicCardActionRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/untap-card`, req)
+}
+
+export function addCounter(gameId: string, req: CardCountersRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/add-counter`, req)
+}
+
+export function removeCounter(gameId: string, req: CardCountersRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/remove-counter`, req)
+}
+
+export function changeLife(gameId: string, req: ChangeLifeRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/change-life`, req)
+}
+
+export function setLife(gameId: string, req: SetLifeRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/set-life`, req)
+}
+
+export function changeMana(gameId: string, req: ChangeManaRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/change-mana`, req)
+}
+
+export function clearMana(gameId: string, req: PlayerActionRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/clear-mana`, req)
 }

@@ -108,7 +108,8 @@ class PlayerStateOut(BaseModel):
         "Fire": 0,
         "Water": 0,
         "Earth": 0,
-        "Air": 0
+        "Air": 0,
+        "Neutral": 0
     })
 
     deck_count: int
@@ -140,7 +141,7 @@ class GameStateBroadcast(BaseModel):
     state: GameStateOut
 
 class JoinGameRequest(BaseModel):
-    # player_id: str
+    player_id: str
     name: str
 
 class SelectDeckRequest(BaseModel):

@@ -25,3 +25,6 @@ async def game_ws(game_id: str, player_id: str, websocket: WebSocket):
 
     except WebSocketDisconnect:
         CONNECTION_MANAGER.disconnect(game_id, player_id)
+
+# add in functionality to send unseen cards in a broadcast to be cached
+# e.g. the first time some one makes a golem token, include it in the broadcast to be cached

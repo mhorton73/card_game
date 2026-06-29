@@ -12,7 +12,7 @@ class Game:
         self.created_at = datetime.now(timezone.utc)
         self.rng = random.Random(seed)
 
-        self.players: dict[str, Player]
+        self.players: dict[str, Player] = {}
         self.max_players = 2
 
         self.stack: list[StackItem] = []
