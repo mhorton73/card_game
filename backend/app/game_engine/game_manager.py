@@ -3,6 +3,8 @@ from .objects.game import Game
 from .objects.player import Player
 from .objects.card_instance import CardInstance
 
+import os
+
 class GameManager:
     def __init__(self):
         self.games: dict[str, Game] = {}
@@ -49,7 +51,7 @@ class GameManager:
         if not self.game_exists(game_id):
             raise ValueError("Cannot find game") 
         game = self.get_game(game_id)
-        for p in game.players.values():
+        for p in game.players.keys():
             game.shuffle_deck(p)
         game.game_started = True
         return game

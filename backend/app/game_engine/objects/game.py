@@ -22,8 +22,10 @@ class Game:
         # self.active_player_index = 0
 
     def add_player(self, player: Player):
+        # just return if already in game instead of raising an error for now
         if self.players.get(player.player_id):
-            raise ValueError("Player already in game")
+            return
+            # raise ValueError("Player already in game")
         if len(self.players) >= self.max_players:
             raise ValueError("Game full")
         self.players[player.player_id] = player

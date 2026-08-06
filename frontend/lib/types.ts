@@ -188,6 +188,8 @@ export type SelectDeckRequest = {
   deck_id: number
 }
 
+// Card Action Requests
+
 export type BasicCardActionRequest = {
   instance_id: string
   source: string
@@ -226,6 +228,7 @@ export type PeekTopNRequest = {
 export type AddToStackRequest = {
   player_id: string
   source: string
+  source_owner: string
   instance_id: string
 }
 

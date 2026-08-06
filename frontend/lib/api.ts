@@ -22,7 +22,8 @@ import {
   SetLifeRequest,
   ChangeManaRequest,
   CardInstanceOut,
-  JoinGameRequest
+  JoinGameRequest,
+  SelectDeckRequest
 } from "./types"
 
 const API_BASE = "http://localhost:8000"
@@ -201,7 +202,7 @@ export async function createGame(): Promise<string> {
   return data.game_id
 }
 
-export async function joinGame(gameId: string, req: JoinGameRequest): Promise<string> {
+export async function joinGame(gameId: string, req: JoinGameRequest): Promise<void> {
   const res = await fetch(`${API_BASE}/games/${gameId}/join`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -211,10 +212,30 @@ export async function joinGame(gameId: string, req: JoinGameRequest): Promise<st
   if (!res.ok) {
     throw new Error("Failed to join game")
   }
+}
 
-  const data: CreateGameResponse = await res.json()
 
-  return data.game_id
+export async function selectDeck(gameId: string, req: SelectDeckRequest): Promise<void> {
+  const res = await fetch(`${API_BASE}/games/${gameId}/select-deck`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(req),
+  })
+
+  if (!res.ok) {
+    throw new Error("Failed to select deck")
+  }
+}
+
+
+export async function startGame(gameId: string): Promise<void> {
+  const res = await fetch(`${API_BASE}/games/${gameId}/start-game`, {
+    method: "POST"
+  })
+
+  if (!res.ok) {
+    throw new Error("Failed to start")
+  }
 }
 
 // Game Route API calls

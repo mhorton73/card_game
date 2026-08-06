@@ -1,9 +1,14 @@
 import { CardInstancePackage } from "@/lib/types"
 import GameCard from "./GameCard"
+import { GameActions, ZoneName } from "@/lib/gameActions"
+
 
 type ZoneProps = {
-  zoneName: string
+  zoneName: ZoneName
+  ownerId: string
+  opponentId: string
   cards: CardInstancePackage[]
+  actions: GameActions
   flip?: boolean
 }
 

@@ -124,7 +124,8 @@ async def select_deck(game_id: str, req : SelectDeckRequest, session = Depends(g
 
 @router.post("/games/{game_id}/start-game", status_code=200)
 async def start_game(game_id: str):
-    GAME_MANAGER.start_game(game_id)
+    game = GAME_MANAGER.start_game(game_id)
+    await CONNECTION_MANAGER.broadcast_gamestate(game)
 
     return{"status": "Game Started"}
 

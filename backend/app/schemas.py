@@ -174,6 +174,7 @@ class PeekTopNRequest(BaseModel):
 class AddToStackRequest(BaseModel):
     player_id:str
     source: str
+    source_owner_id: str
     instance_id: str
 
 class RemoveFromStackRequest(BaseModel):

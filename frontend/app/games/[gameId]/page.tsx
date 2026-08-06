@@ -4,14 +4,13 @@ import GameClient from "@/components/GameClient"
 
 
 type Props = {
-  params: {
-    gameId: string
-  }
+  params: Promise<{ gameId: string }>
 }
 
-export default function GamePage({ params }: Props) {
+export default async function GamePage({ params }: Props) {
 
+  const { gameId } = await params
   return (
-    <GameClient gameId={params.gameId} />
+    <GameClient gameId={gameId} />
   )
 }
