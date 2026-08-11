@@ -1,12 +1,19 @@
 import { CardInstancePackage } from "@/lib/types"
 import GameCard from "./GameCard"
+import { GameActions } from "@/lib/gameActions"
 
 type HandProps = {
   cards: CardInstancePackage[]
+  ownerId: string
+  opponentId: string
+  actions: GameActions
 }
 
 export default function Hand({
   cards,
+  ownerId,
+  opponentId,
+  actions
 }: HandProps) {
   return (
     <div className="border rounded-lg p-2 bg-gray-50">
@@ -23,6 +30,13 @@ export default function Hand({
             <GameCard
               card={c.card}
               instance={c.instance}
+              context={{
+                instance_id: c.instance.instance_id,
+                zone: "hand", 
+                owner_id: ownerId,
+                opponent_id: opponentId
+              }}
+              actions={actions}
             />
           </div>
         ))}

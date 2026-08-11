@@ -1,7 +1,11 @@
-import { CardInstancePackage } from "@/lib/types"
+import { CardInstancePackage, ZoneName } from "@/lib/types"
 import GameCard from "./GameCard"
-import { GameActions, ZoneName } from "@/lib/gameActions"
+import { GameActions} from "@/lib/gameActions"
 
+// Passed down from GameBoard are the zone name, the owner of the zone,
+// the player on the other side of the board, and a list of card instances
+// and game action handlers. Card instance package contains the card
+// and card instance types.
 
 type ZoneProps = {
   zoneName: ZoneName
@@ -14,9 +18,13 @@ type ZoneProps = {
 
 export default function Zone({
   zoneName,
+  ownerId,
+  opponentId,
   cards,
+  actions,
   flip
 }: ZoneProps) {
+
   return (
     <div className="border rounded-lg p-2 bg-gray-50">
       <h2 className="font-semibold mb-2">
@@ -32,6 +40,13 @@ export default function Zone({
             <GameCard
               card={c.card}
               instance={c.instance}
+              context={{
+                instance_id: c.instance.instance_id,
+                zone: zoneName, 
+                owner_id: ownerId,
+                opponent_id: opponentId
+              }}
+              actions={actions}
             />
           </div>
         ))}

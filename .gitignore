@@ -7,7 +7,20 @@ __pycache__/
 
 # Database files
 *.db
+*.dump
 
 # OS junk
 .DS_Store
 .vscode/
+
+# Next.js
+
+.next
+
+# Docker (remove later if i set it up properly)
+
+Dockerfile
+.dockerignore
+docker-compose.yml
+requirements.txt
+.env.docker

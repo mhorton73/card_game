@@ -163,6 +163,25 @@ export type GameStateBroadcast = {
   state: GameStateOut
 }
 
+// Game Action input types
+
+export type ZoneName =
+  | "deck"
+  | "hand"
+  | "graveyard"
+  | "exile"
+  | "creatures"
+  | "catalysts"
+  | "third_layer"
+  | "pending"
+
+export type CardContext = {
+  instance_id: string
+  zone: ZoneName
+  owner_id: string
+  opponent_id: string
+}
+
 // Game Route Requests
 
 export type GameLobbyListing = {
@@ -193,22 +212,22 @@ export type SelectDeckRequest = {
 export type BasicCardActionRequest = {
   instance_id: string
   source: string
-  source_owner: string
+  source_owner_id: string
 }
 
 export type CardCountersRequest = {
   instance_id: string
   source: string
-  source_owner: string
+  source_owner_id: string
   counter_type: string
 }
 
 export type MoveCardRequest = {
   instance_id: string
   source: string
-  source_owner: string
+  source_owner_id: string
   destination: string
-  destination_owner: string
+  destination_owner_id: string
 }
 
 export type DrawCardsRequest = {
@@ -228,7 +247,7 @@ export type PeekTopNRequest = {
 export type AddToStackRequest = {
   player_id: string
   source: string
-  source_owner: string
+  source_owner_id: string
   instance_id: string
 }
 

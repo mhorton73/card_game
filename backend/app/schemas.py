@@ -148,6 +148,8 @@ class SelectDeckRequest(BaseModel):
     player_id: str
     deck_id: int
 
+# --------- Card action schemas ---------
+
 class BasicCardActionRequest(BaseModel):
     instance_id: str
     source: str

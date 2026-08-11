@@ -29,6 +29,11 @@ import {
 const API_BASE = "http://localhost:8000"
 
 async function callGameAction(url:string, body: unknown): Promise<void> {
+  
+  console.log("GAME ACTION URL:", url)
+  console.log("GAME ACTION BODY:", body)
+  console.log("GAME ACTION BODY JSON:", JSON.stringify(body))
+
   const res = await fetch(url, {
     method: "POST",
     headers: {
@@ -38,6 +43,12 @@ async function callGameAction(url:string, body: unknown): Promise<void> {
   })
 
   if (!res.ok) {
+    console.error("GAME ACTION FAILED")
+    console.error("Status:", res.status)
+    console.error("Status text:", res.statusText)
+
+    const errorBody = await res.text()
+    console.error("Response body:", errorBody)
     throw new Error("Request failed")
   }
 }
@@ -45,7 +56,7 @@ async function callGameAction(url:string, body: unknown): Promise<void> {
 // Card Editor API calls
 
 export async function getSets(): Promise<SetListResponse> {
-  const res = await fetch("http://localhost:8000/sets")
+  const res = await fetch(`${API_BASE}/sets`)
   if (!res.ok) throw new Error("Failed to fetch sets")
   return res.json()
 }
@@ -67,7 +78,7 @@ export async function getCards(setId?: number): Promise<CardListResponse> {
 }
 
 export async function getCard(cardId: number): Promise<Card> {
-  const res = await fetch(`http://localhost:8000/cards/${cardId}`)
+  const res = await fetch(`${API_BASE}/cards/${cardId}`)
   return res.json()
 }
 

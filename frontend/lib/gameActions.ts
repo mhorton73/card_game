@@ -18,23 +18,7 @@ import {
     tapCard,
     untapCard
 } from "./api"
-import {CardInstanceOut} from "./types"
-
-export type ZoneName =
-  | "deck"
-  | "hand"
-  | "graveyard"
-  | "creatures"
-  | "catalysts"
-  | "third_layer"
-  | "pending"
-
-export type CardContext = {
-  instance_id: string
-  zone: ZoneName
-  owner_id: string
-  opponent_id: string
-}
+import {CardInstanceOut, CardContext, ZoneName} from "./types"
 
 export type GameActions = {
   moveCardToYourZone: (cardContext: CardContext, destination: ZoneName) => Promise<void>
@@ -57,21 +41,23 @@ export type GameActions = {
   clearMana: (playerId: string) => Promise<void>
 }
 
+// Creates handlers for game actions to be attached to cards
+
 export function createGameActions(gameId: string): GameActions {
     return {
         moveCardToYourZone: (cardContext, destination) => moveCard(gameId, {
             instance_id: cardContext.instance_id,
             source: cardContext.zone,
-            source_owner: cardContext.owner_id,
+            source_owner_id: cardContext.owner_id,
             destination: destination,
-            destination_owner: cardContext.owner_id
+            destination_owner_id: cardContext.owner_id
         }),
         moveCardToOppZone: (cardContext, destination) => moveCard(gameId, {
             instance_id: cardContext.instance_id,
             source: cardContext.zone,
-            source_owner: cardContext.owner_id,
+            source_owner_id: cardContext.owner_id,
             destination: destination,
-            destination_owner: cardContext.opponent_id
+            destination_owner_id: cardContext.opponent_id
         }),
         drawCards: (playerId, number) => drawCards(gameId, {
             player_id: playerId, 
@@ -80,12 +66,12 @@ export function createGameActions(gameId: string): GameActions {
         putOnTop: (cardContext) => putOnTop(gameId, {
             instance_id: cardContext.instance_id,
             source: cardContext.zone,
-            source_owner: cardContext.owner_id
+            source_owner_id: cardContext.owner_id
         }),
         putOnBottom: (cardContext) => putOnBottom(gameId, {
             instance_id: cardContext.instance_id,
             source: cardContext.zone,
-            source_owner: cardContext.owner_id
+            source_owner_id: cardContext.owner_id
         }),
         drawFromBottom: (playerId) => drawFromBottom(gameId, {player_id: playerId}),
         peekTopN: (playerId, n) => peekTopN(gameId, {
@@ -96,30 +82,30 @@ export function createGameActions(gameId: string): GameActions {
         addToStack: (playerId, cardContext) => addToStack(gameId, {
             player_id: playerId,
             source: cardContext.zone,
-            source_owner: cardContext.owner_id,
+            source_owner_id: cardContext.owner_id,
             instance_id: cardContext.instance_id
         }),
         removeFromStack: (stackId) => removeFromStack(gameId, {stack_id: stackId}),
         tapCard: (cardContext) => tapCard(gameId, {
             instance_id: cardContext.instance_id,
             source: cardContext.zone,
-            source_owner: cardContext.owner_id
+            source_owner_id: cardContext.owner_id
         }),
         untapCard: (cardContext) => untapCard(gameId, {
             instance_id: cardContext.instance_id,
             source: cardContext.zone,
-            source_owner: cardContext.owner_id
+            source_owner_id: cardContext.owner_id
         }),
         addCounter: (cardContext, counterType) => addCounter(gameId, {
             instance_id: cardContext.instance_id,
             source: cardContext.zone,
-            source_owner: cardContext.owner_id,
+            source_owner_id: cardContext.owner_id,
             counter_type: counterType
         }),
         removeCounter: (cardContext, counterType) => removeCounter(gameId, {
             instance_id: cardContext.instance_id,
             source: cardContext.zone,
-            source_owner: cardContext.owner_id,
+            source_owner_id: cardContext.owner_id,
             counter_type: counterType
         }),
         changeLife: (playerId, amount) => changeLife(gameId, {

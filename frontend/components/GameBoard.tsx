@@ -1,7 +1,7 @@
 import { ProcessedGameState } from "@/lib/types"
 import Zone from "./GameZone"
 import Hand from "./GameHand"
-import SideZone from "./SideZone"
+import GameSideZone from "./GameSideZone"
 import { GameActions } from "@/lib/gameActions"
 
 type Props = {
@@ -82,10 +82,19 @@ export default function GameBoard({ gameState, playerId, actions }: Props) {
       </div>
 
       {/* ================= HAND ================= */}
-      <Hand cards={you.hand} />
+      <Hand 
+        cards={you.hand} 
+        ownerId={you.player_id}
+        opponentId={opponent.player_id}
+        actions={actions}
+      />
 
       {/* ================= SIDE ZONES ================= */}
-      {/*<SideZones you={you} opponent={opponent} />*/}
+      <GameSideZone
+        playerId={you.player_id}
+        deckCount={you.deck_count}
+        actions={actions}
+      />
     </div>
   )
 }
