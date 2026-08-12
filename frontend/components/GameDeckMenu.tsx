@@ -37,6 +37,28 @@ export default function GameDeckMenu({
       >
         Draw a card
       </button>
+
+      {/* Draw a card*/}
+      <button
+        className="block w-full rounded px-3 py-2 text-left hover:bg-gray-700"
+        onClick={() => {
+          actions.shuffleDeck(ownerId)
+          onClose()
+        }}
+      >
+        Shuffle deck
+      </button>
+      
+      {/* Draw from bottom */}
+      <button
+        className="block w-full rounded px-3 py-2 text-left hover:bg-gray-700"
+        onClick={() => {
+          actions.drawFromBottom(ownerId)
+          onClose()
+        }}
+      >
+        Draw from bottom
+      </button>
     </div>
   )
 }

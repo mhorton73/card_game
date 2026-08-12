@@ -88,6 +88,26 @@ export default function GameZoneCardMenu({
       >
         Untap
       </button>
+      {/* Put on top of deck */}
+      <button
+        className="block w-full rounded px-3 py-2 text-left hover:bg-gray-700"
+        onClick={() => {
+          actions.putOnTop(context)
+          onClose()
+        }}
+      >
+        Put on top of deck
+      </button>
+      {/* Put on top of deck */}
+      <button
+        className="block w-full rounded px-3 py-2 text-left hover:bg-gray-700"
+        onClick={() => {
+          actions.putOnBottom(context)
+          onClose()
+        }}
+      >
+        Put on bottom of deck
+      </button>
     </div>
   )
 }

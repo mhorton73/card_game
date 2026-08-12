@@ -2,6 +2,7 @@ import { ProcessedGameState } from "@/lib/types"
 import Zone from "./GameZone"
 import Hand from "./GameHand"
 import GameDeckZone from "./GameDeckZone"
+import GameSideZone from "./GameSideZone"
 import { GameActions } from "@/lib/gameActions"
 
 type Props = {
@@ -94,6 +95,20 @@ export default function GameBoard({ gameState, playerId, actions }: Props) {
         ownerId={you.player_id}
         deckCount={you.deck_count}
         actions={actions}
+      />
+      <GameSideZone
+        zoneName={"graveyard"}
+        ownerId={you.player_id}
+        opponentId={opponent.player_id}
+        cards={you.graveyard}
+        actions = {actions}
+      />
+      <GameSideZone
+        zoneName={"exile"}
+        ownerId={you.player_id}
+        opponentId={opponent.player_id}
+        cards={you.exile}
+        actions = {actions}
       />
     </div>
   )

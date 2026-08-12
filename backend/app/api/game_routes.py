@@ -261,3 +261,20 @@ async def clear_mana(game_id: str, req: PlayerActionRequest):
 
     await run_game_action(game_id, clear_mana_action, request = req)
     return {"status": "ok"}
+
+@router.post("/games/{game_id}/actions/shuffle-deck", status_code=200)
+async def shuffle_deck(game_id: str, req: PlayerActionRequest):
+
+    game = GAME_MANAGER.get_game(game_id)
+    game.shuffle_deck(req.player_id)
+
+    # Let people know that the player's deck has been shuffled
+    await CONNECTION_MANAGER.broadcast_event(
+        game_id,
+        {
+            "type": "shuffle deck",
+            "player_id": req.player_id
+        }
+    )
+
+    return {"status": "ok"}

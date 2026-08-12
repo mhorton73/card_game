@@ -336,3 +336,7 @@ export function changeMana(gameId: string, req: ChangeManaRequest): Promise<void
 export function clearMana(gameId: string, req: PlayerActionRequest): Promise<void> {
   return callGameAction(`${API_BASE}/games/${gameId}/actions/clear-mana`, req)
 }
+
+export function shuffleDeck(gameId: string, req: PlayerActionRequest): Promise<void> {
+  return callGameAction(`${API_BASE}/games/${gameId}/actions/shuffle-deck`, req)
+}

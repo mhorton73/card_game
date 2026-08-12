@@ -15,6 +15,7 @@ import {
     removeCounter, 
     removeFromStack,
     setLife,
+    shuffleDeck,
     tapCard,
     untapCard
 } from "./api"
@@ -39,6 +40,7 @@ export type GameActions = {
   setLife: (playerId: string, life: number) => Promise<void>
   changeMana: (playerId: string, element: string, amount: number) => Promise<void>
   clearMana: (playerId: string) => Promise<void>
+  shuffleDeck: (playerId: string) => Promise<void>
 }
 
 // Creates handlers for game actions to be attached to cards
@@ -121,7 +123,8 @@ export function createGameActions(gameId: string): GameActions {
             element,
             amount
         }),
-        clearMana: (playerId) => clearMana(gameId, {player_id: playerId})
+        clearMana: (playerId) => clearMana(gameId, {player_id: playerId}),
+        shuffleDeck: (playerId) => shuffleDeck(gameId, {player_id: playerId})
     }
 }
 
