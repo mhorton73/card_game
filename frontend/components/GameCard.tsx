@@ -1,6 +1,6 @@
 "use client"
 
-import {useState} from "react"
+import {useState, useEffect} from "react"
 import {Card, CardInstanceOut, CardContext} from "@/lib/types"
 import CardComponent from "./CardComponent"
 import { GameActions } from "@/lib/gameActions"
@@ -33,6 +33,24 @@ export default function GameCard({
       y: event.clientY,
     })
   }
+
+  // Close the menu if the escape key is pressed
+
+  useEffect(() => {
+    if (!menu) return
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setMenu(null)
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown)
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [menu])
 
   return (
     <div className={"relative"}
