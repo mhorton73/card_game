@@ -5,7 +5,8 @@ from sqlalchemy import pool
 
 from alembic import context
 from app.database import Base, DATABASE_URL
-from app.models import Card, CardSet, Deck, DeckCard
+# Import models so they are registered with Base.metadata for Alembic
+from app import models
 
 
 # this is the Alembic Config object, which provides

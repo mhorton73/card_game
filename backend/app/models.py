@@ -1,4 +1,6 @@
 
+from enum import Enum
+from datetime import datetime, timezone
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 from sqlalchemy.dialects.postgresql import JSONB
@@ -103,3 +105,46 @@ class DeckCard(Base):
         if value < 0:
             raise ValueError("Quantity cannot be negative")
         return value
+
+class UserRole(str, Enum):
+    TESTER = "tester"
+    DESIGNER = "designer"
+    ADMIN = "admin"
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(unique=True, nullable=False)
+    password_hash: Mapped[str] = mapped_column(nullable=False)
+    role: Mapped[UserRole] = mapped_column(
+        default=UserRole.TESTER,
+        nullable=False,
+    )
+    is_active: Mapped[bool] = mapped_column(
+        default=True,
+        nullable=False,
+    )
+
+class InviteKey(Base):
+    __tablename__ = "invite_keys"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+
+    key_hash: Mapped[str] = mapped_column(nullable=False, unique=True)
+
+    role: Mapped[UserRole] = mapped_column(nullable=False)
+
+    created_at: Mapped[datetime] = mapped_column(
+        default=datetime.now(timezone.utc),
+        nullable=False,
+    )
+
+    expires_at: Mapped[datetime | None]
+
+    used_at: Mapped[datetime | None]
+
+    used_by: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id"),
+        nullable=True,
+    )
