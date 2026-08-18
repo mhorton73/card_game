@@ -8,6 +8,10 @@ export default async function DecksPage() {
         <main className="p-8">
             <h1 className="text-3x1 font-bold mb-6">Decks</h1>
 
+            <Link href="/" className="block text-blue-600 hover:underline">
+              Homepage
+            </Link>
+
             {/* Create deck*/}
             <Link href="decks/new" className="text-blue-600 hover:underline">
                 Create New Deck

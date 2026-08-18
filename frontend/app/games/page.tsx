@@ -51,6 +51,10 @@ export default function GamesPage() {
     <div style={{ padding: 24 }}>
       <h1>Game Lobby</h1>
 
+      <Link href="/" className="block text-blue-600 hover:underline">
+        Homepage
+      </Link>
+
       <button onClick={handleCreateGame} disabled={creating}>
         {creating ? "Creating..." : "Create Game"}
       </button>

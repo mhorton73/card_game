@@ -13,6 +13,10 @@ export default async function CardsPage() {
       <main className="p-8">
         <h1 className="text-3xl font-bold mb-6">Cards</h1>
 
+        <Link href="/" className="block text-blue-600 hover:underline">
+          Homepage
+        </Link>
+
         <Link href="/cards/new?returnTo=/cards" className="text-blue-600 hover:underline">
           Create a New Card
         </Link>
