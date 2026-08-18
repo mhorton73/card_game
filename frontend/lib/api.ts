@@ -118,7 +118,9 @@ export async function updateCard(id: number, payload: CardIn): Promise<Card> {
 // Deck Builder API calls
 
 export async function getDecks(): Promise<DeckCollectionResponse>  {
-  const res = await fetch(`${API_BASE}/decks`)
+  const res = await fetch(`${API_BASE}/decks`, {
+    cache: "no-store",
+  })
   if (!res.ok) throw new Error("Failed to fetch decks")
 
   return res.json()
