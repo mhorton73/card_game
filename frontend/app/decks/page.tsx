@@ -1,9 +1,12 @@
 import Link from "next/link"
 import { getDecks } from "@/lib/api"
+import DeckFormModal from "@/components/DeckFormModal"
 import DeckPreview from "@/components/DeckPreview"
+
 
 export default async function DecksPage() {
     const data = await getDecks()
+
     return (
         <main className="p-8">
             <h1 className="text-3x1 font-bold mb-6">Decks</h1>
@@ -13,9 +16,7 @@ export default async function DecksPage() {
             </Link>
 
             {/* Create deck*/}
-            <Link href="decks/new" className="text-blue-600 hover:underline">
-                Create New Deck
-            </Link>
+            <DeckFormModal/>
              <div className="mt-6 grid gap-4 max-w-[600px] mx-auto">
         {data.decks.map((deck) => (
           <div
