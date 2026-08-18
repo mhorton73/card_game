@@ -26,7 +26,7 @@ import {
   SelectDeckRequest
 } from "./types"
 
-const API_BASE = process.env.API_URL || "http://localhost:8000";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 async function callGameAction(url:string, body: unknown): Promise<void> {
   
