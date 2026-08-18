@@ -67,8 +67,13 @@ export async function getCards(setId?: number): Promise<CardListResponse> {
   if (setId !== undefined) {
     url.searchParams.append("set_id", setId.toString())
   }
-  
+
+  console.log("API_BASE:", API_BASE)
+  console.log("GETTING CARDS FROM:", url.toString())
+
   const res = await fetch(url.toString())
+
+  console.log("GET /cards STATUS:", res.status)
 
   if (!res.ok) {
     throw new Error("Failed to fetch cards")
