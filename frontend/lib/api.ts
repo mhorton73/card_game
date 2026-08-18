@@ -174,7 +174,7 @@ export async function removeDeckCardCopy(deckId: number, cardId: number): Promis
 }
 
 export async function getDeck(deckId:number): Promise<DeckDetail> {
-  const res = await fetch(`http://localhost:8000/decks/${deckId}`)
+  const res = await fetch(`${API_BASE}/decks/${deckId}`)
   return res.json()
 }
 

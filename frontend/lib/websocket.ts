@@ -1,5 +1,5 @@
 
-const WS_BASE = "http://localhost:8000"
+const WS_BASE = process.env.API_URL || "http://localhost:8000";
 
 export function connectToGame(gameId: string, playerId: string): WebSocket {
   return new WebSocket(
