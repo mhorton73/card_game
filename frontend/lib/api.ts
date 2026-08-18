@@ -202,7 +202,9 @@ export async function cloneDeck(deckId: number): Promise<Deck> {
 // Game Lobby API calls
 
 export async function listGames(): Promise<GameLobbyListing[]>  {
-  const res = await fetch(`${API_BASE}/games`)
+  const res = await fetch(`${API_BASE}/games`, {
+    cache: "no-store",
+  })
   if (!res.ok) throw new Error("Failed to fetch games")
 
   return res.json()
