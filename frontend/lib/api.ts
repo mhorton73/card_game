@@ -71,7 +71,9 @@ export async function getCards(setId?: number): Promise<CardListResponse> {
   console.log("API_BASE:", API_BASE)
   console.log("GETTING CARDS FROM:", url.toString())
 
-  const res = await fetch(url.toString())
+  const res = await fetch(url.toString(), {
+    cache: "no-store",
+  })
 
   console.log("GET /cards STATUS:", res.status)
 
