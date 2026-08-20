@@ -7,7 +7,19 @@ type Props = {
 // w-[250px] for cards for the intended display size, idk ill fix it later
 export default function CardComponent({ card }: Props) {
   return (
-    <div className="relative border rounded-lg p-4 shadow hover:shadow-lg transition-shadow duration-200 aspect-[5/7] w-full min-w-0"> 
+    <div className="
+      relative 
+      w-[250px]
+      aspect-[5/7] 
+      min-w-0
+      border 
+      rounded-lg 
+      p-4 
+      shadow 
+      hover:shadow-lg 
+      transition-shadow 
+      duration-200 
+    "> 
       <h2 className="text-xl font-bold mb-1">{card.name}</h2>
 
       {card.cost && <p className="text-sm">Cost: {card.cost}</p>}

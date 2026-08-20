@@ -1,5 +1,6 @@
 
 import { 
+  SetIn, SetOut,
   SetListResponse,
   CardIn, Card,
   CardListResponse, 
@@ -23,7 +24,8 @@ import {
   ChangeManaRequest,
   CardInstanceOut,
   JoinGameRequest,
-  SelectDeckRequest
+  SelectDeckRequest,
+  CreateGameRequest,
 } from "./types"
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
@@ -58,6 +60,20 @@ async function callGameAction(url:string, body: unknown): Promise<void> {
 export async function getSets(): Promise<SetListResponse> {
   const res = await fetch(`${API_BASE}/sets`)
   if (!res.ok) throw new Error("Failed to fetch sets")
+  return res.json()
+}
+
+export async function addSet(set: SetIn): Promise<SetOut> {
+  const res = await fetch(`${API_BASE}/sets`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(set),
+  })
+  
+  if (!res.ok) {
+    throw new Error("Failed to create set")
+  }
+
   return res.json()
 }
 
@@ -210,9 +226,11 @@ export async function listGames(): Promise<GameLobbyListing[]>  {
   return res.json()
 }
 
-export async function createGame(): Promise<string> {
+export async function createGame(req: CreateGameRequest): Promise<string> {
   const res = await fetch(`${API_BASE}/games/create`, {
-    method: "POST"
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(req)
   })
 
   if (!res.ok) {

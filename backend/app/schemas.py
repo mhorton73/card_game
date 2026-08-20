@@ -140,6 +140,9 @@ class GameStateBroadcast(BaseModel):
     type: str = "game_state"
     state: GameStateOut
 
+class CreateGameRequest(BaseModel):
+    name: str | None = None
+
 class JoinGameRequest(BaseModel):
     player_id: str
     name: str

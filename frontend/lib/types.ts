@@ -1,4 +1,13 @@
 
+export type SetIn ={
+  name: string
+}
+
+export type SetOut = {
+  id: number
+  name: string
+}
+
 export type CardSet = {
   id: number
   name: string
@@ -190,6 +199,10 @@ export type GameLobbyListing = {
   players: number
   max_players: number
   started: boolean
+}
+
+export type CreateGameRequest = {
+  name: string
 }
 
 export type CreateGameResponse = {

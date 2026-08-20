@@ -3,6 +3,7 @@ import { getDecks} from "@/lib/api"
 import DeckFormModal from "@/components/DeckFormModal"
 import DeckPreview from "@/components/DeckPreview"
 import DeckDeleteButton from "@/components/DeckDeleteButton"
+import CreateFormModal from "@/components/CreateFormModal"
 
 
 export default async function DecksPage() {
@@ -17,7 +18,7 @@ export default async function DecksPage() {
         </Link>
 
         {/* Create deck*/}
-        <DeckFormModal/>
+        <CreateFormModal type="deck"/>
 
         <div className="mt-6 grid gap-4 max-w-[600px] mx-auto">
           {data.decks.map((deck) => (

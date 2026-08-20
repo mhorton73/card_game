@@ -12,10 +12,10 @@ class GameManager:
     def game_exists(self, game_id: str):
         return game_id in self.games         
 
-    def create_game(self, game_id: str):
+    def create_game(self, game_id: str, name: str | None = None):
         if self.game_exists(game_id):
             raise ValueError("Game already exists") 
-        game = Game(game_id)
+        game = Game(game_id, name)
         self.games[game_id]=game
         return game
 

@@ -65,34 +65,3 @@ export default function DeckDeleteButton({ deckId }: DeckDeleteButtonProps) {
     </>
   )
 }
-
-{/*
-  return (
-    <>
-      {!pending && (
-        <button
-          onClick={() => setPending(true)}
-          className="text-red-600 hover:underline"
-        >
-          Delete
-        </button>
-      )}
-      {pending && (
-        <>
-          <button
-            onClick={handleDelete}
-            className="text-red-600 hover:underline"
-          >
-            Confirm
-          </button>
-          <button
-            onClick={() => setPending(false)}
-            className="text-red-600 hover:underline"
-          >
-            Cancel
-          </button>
-        </>
-      )}
-    </>
-  )
-*/}

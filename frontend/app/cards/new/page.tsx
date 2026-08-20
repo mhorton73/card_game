@@ -1,7 +1,7 @@
 
 import CardForm from "@/components/CardForm"
 import { getSets } from"@/lib/api"
-import Link from "next/link";
+import Link from "next/link"
 
 type Props = {
   searchParams: Promise<{

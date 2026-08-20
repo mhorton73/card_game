@@ -4,7 +4,7 @@ const links = [
   {
     href: "/cards",
     title: "Cards",
-    description: "Browse and create cards for your collection.",
+    description: "Browse the card gallery, edit existing cards and create new cards.",
   },
   {
     href: "/decks",
@@ -20,15 +20,17 @@ const links = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gray-950 text-white">
+    <main className="min-h-screen]">
       <div className="mx-auto max-w-5xl px-6 py-20">
         <div className="text-center">
           <h1 className="text-5xl font-bold tracking-tight">
             Card Game
           </h1>
 
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-gray-400">
-            Create cards, build decks, and play games with friends.
+          <p className="mx-auto mt-4 max-w-2xl text-lg">
+            Welcome to my card game platform demo! Right now, everything is still pretty rough,
+            but you can make cards and decks, then play with them (not automated, everything is manual,
+            so I recommend voice chat with your friend/s).
           </p>
         </div>
 
@@ -37,13 +39,20 @@ export default function Home() {
             <Link
               key={link.href}
               href={link.href}
-              className="group rounded-xl border border-gray-800 bg-gray-900 p-6 transition hover:border-blue-500 hover:bg-gray-800"
+              className="
+                group 
+                rounded-xl 
+                border 
+                bg-[var(--surface)] 
+                p-6 transition 
+                hover:border-[var(--accent)]
+              "
             >
-              <h2 className="text-2xl font-semibold group-hover:text-blue-400">
+              <h2 className="text-2xl font-semibold group-hover:text-[var(--text-muted)]">
                 {link.title}
               </h2>
 
-              <p className="mt-3 text-gray-400">
+              <p className="mt-3">
                 {link.description}
               </p>
 

@@ -3,13 +3,13 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { listGames, createGame } from "@/lib/api"
+import { listGames } from "@/lib/api"
 import type { GameLobbyListing } from "@/lib/types"
+import CreateFormModal from "@/components/CreateFormModal"
 
 export default function GamesPage() {
   const [games, setGames] = useState<GameLobbyListing[]>([])
   const [loading, setLoading] = useState(true)
-  const [creating, setCreating] = useState(false)
 
   async function loadGames() {
     setLoading(true)
@@ -36,7 +36,8 @@ export default function GamesPage() {
     loadGames()
   }, [])
 
-  async function handleCreateGame() {
+  // old create game function that redirected you to the new game lobby
+  /*async function handleCreateGame() {
     setCreating(true)
     try {
       const gameId = await createGame();
@@ -45,7 +46,7 @@ export default function GamesPage() {
     } finally {
       setCreating(false)
     }
-  }
+  }*/
 
   return (
     <div style={{ padding: 24 }}>
@@ -55,9 +56,7 @@ export default function GamesPage() {
         Homepage
       </Link>
 
-      <button onClick={handleCreateGame} disabled={creating}>
-        {creating ? "Creating..." : "Create Game"}
-      </button>
+      <CreateFormModal type="game" onCreated={loadGames}/>
 
       <hr />
 

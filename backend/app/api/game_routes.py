@@ -9,6 +9,7 @@ from app.game_engine.serializers import serialize_card_instance, serialize_games
 from ..database import get_session
 from ..schemas import (
     GameStateOut,
+    CreateGameRequest,
     JoinGameRequest,
     SelectDeckRequest,
     MoveCardRequest,
@@ -84,10 +85,10 @@ async def list_games():
     ]
 
 @router.post("/games/create", status_code=201)
-async def create_game_route():
+async def create_game_route(req: CreateGameRequest):
 
     game_id = str(uuid.uuid4())
-    GAME_MANAGER.create_game(game_id)
+    GAME_MANAGER.create_game(game_id, req.name)
 
     return {
         "game_id": game_id,
