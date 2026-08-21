@@ -56,9 +56,16 @@ export default function GamesPage() {
         Homepage
       </Link>
 
+      <p className="max-w-[600px] my-4">
+        During a game, you can right click the deck to access its command menu.
+        similarly, you can right click a card (in any zone, including the side zones)
+        to access its command menu. You can hit escape to close any menu that is open.
+        Click on the side zones (except the deck) to open their contents.
+      </p>
+
       <CreateFormModal type="game" onCreated={loadGames}/>
 
-      <hr className="mb-2"/>
+      <hr className="mb-2 max-w-[600px]"/>
 
       {loading ? (
         <p>Loading games...</p>

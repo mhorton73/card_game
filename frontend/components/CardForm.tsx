@@ -74,7 +74,7 @@ export default function CardForm({ sets, initialData, cardId, method, successMes
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-lg mx-auto p-4">
+    <form onSubmit={handleSubmit} className="space-y-4 max-w-lg p-4">
       <div>
         <label className="block font-semibold">Name</label>
         <input

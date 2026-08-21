@@ -34,15 +34,6 @@ export default function Home() {
             Below are the restricted fields for card creation:
           </p>
 
-          <p className="mx-auto mt-4 max-w-2xl text-lg">
-            Currently allowed elements are Fire, Water, Earth, Air. 
-          </p>
-          <p className="mx-auto mt-4 max-w-2xl text-lg">
-            Currently allowed types are Catalyst, Creature, Spell, Invocation, Surge, Site. 
-          </p>
-          <p className="mx-auto mt-4 max-w-2xl text-lg">
-            Currently allowed subtypes are Dragon, Wolf, Golem, Resonant, Ghost.
-          </p>
         </div>
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {links.map((link) => (

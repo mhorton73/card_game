@@ -24,6 +24,16 @@ export default async function CreateCardPage({
         Return to card gallery
       </Link>
 
+      <p className="mt-4 max-w-2xl">
+        Currently allowed types are Catalyst, Creature, Spell, Invocation, Surge, Site. 
+      </p>
+      <p className="max-w-2xl">
+        Currently allowed subtypes are Dragon, Wolf, Golem, Resonant, Ghost.
+      </p>
+      <p className="max-w-2xl">
+        Currently allowed elements are Fire, Water, Earth, Air. 
+      </p>
+
       <CardForm 
         sets={sets.card_sets}
         method="POST"
