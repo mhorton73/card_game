@@ -66,7 +66,7 @@ You should now be able to open the frontend at http://localhost:3000.
 
 ## **Future Improvements/ Reflections**
 
-* The current prototype randomly assigning user ID's for the game lobbies. An authentication system with persistent user accounts is planned and currently in development. In addition, the current frontend is not fully implemented or stylized. These changes are my top priority in this project.
+* The current prototype randomly assigning user ID's for the game lobbies. An authentication system with persistent user accounts is planned and currently in development. This is currently the highest priority change.
 
 * The way the game state is constructed in the backend and broadcasted through the play environment endpoints ended up being rather inconvenient, as several helper functions were needed in both the back and frontend to resolve the context of each card in order to make functional changes. Potentially at some point, a refactor of the game state structure or implementation of a fast lookup function could simplify this.
 

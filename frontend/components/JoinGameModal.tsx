@@ -52,12 +52,12 @@ export default function JoinGameModal( {gameId, playerId}: JoinGameModalProps ) 
         // Transparent gray covering the screen
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           {/*The confirmation box*/}
-          <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+          <div className="w-full max-w-md rounded-lg bg-[var(--background)] p-6 shadow-xl">
             <h2 className="text-2xl font-bold">Join Game</h2>
 
             <form onSubmit={handleSubmit} className="mt-4">
               <label className="block">
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium">
                   Name
                 </span>
 
@@ -65,7 +65,7 @@ export default function JoinGameModal( {gameId, playerId}: JoinGameModalProps ) 
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="mt-1 w-full rounded border border-gray-300 p-2"
+                  className="mt-1 w-full rounded bg-[var(--surface-light)] border p-2"
                   autoFocus
                 />
               </label>
@@ -77,7 +77,14 @@ export default function JoinGameModal( {gameId, playerId}: JoinGameModalProps ) 
                   setName("")
                   setOpen(false)
                   }}
-                  className="rounded px-4 py-2 text-gray-700 hover:bg-gray-100"
+                  className="
+                    rounded 
+                    border 
+                    px-4 
+                    py-2 
+                    bg-[var(--surface)] 
+                    hover:bg-[var(--surface-light)] 
+                    hover:border-[var(--accent)]"
                 >
                   Cancel
                 </button>
@@ -85,7 +92,14 @@ export default function JoinGameModal( {gameId, playerId}: JoinGameModalProps ) 
                 <button
                   type="submit"
                   disabled={loading || !name.trim()}
-                  className="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
+                  className="
+                    rounded 
+                    border 
+                    px-4 
+                    py-2 
+                    bg-[var(--surface)] 
+                    hover:bg-[var(--surface-light)] 
+                    hover:border-[var(--accent)]"
                 >
                   {loading ? "Joining..." : "Join"}
                 </button>

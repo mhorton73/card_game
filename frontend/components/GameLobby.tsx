@@ -68,19 +68,19 @@ export default function GameLobby({
 
   return (
     <div style={{ padding: 24 }}>
-        <h1 className="text-3xl font-bold mb-6">Game Lobby: {gameState.game_name}</h1>
+      <h1 className="text-3xl font-bold mb-6">Game Lobby: {gameState.game_name}</h1>
 
-        <Link href="/games" className="block text-blue-600 hover:underline">
+      <Link href="/games" className="block text-blue-600 hover:underline">
           Return to list
         </Link>
 
-        <p>
+      <p className="mb-4">
             <strong>Game ID:</strong> {gameId}
         </p>
         
-        <JoinGameModal gameId={gameId} playerId={playerId}/>
+      <JoinGameModal gameId={gameId} playerId={playerId}/>
 
-      <table className=" max-w-2xl border-collapse">
+      <table className=" max-w-2xl border-collapse mb-4">
         <thead>
           <tr className="border border-[var(--surface-dark)] bg-[var(--surface-dark)]">
             <th className="min-w-[155px] px-4 py-2 text-left">Player</th>
@@ -107,15 +107,18 @@ export default function GameLobby({
         </tbody>
       </table>
 
-      <h2>Select Deck</h2>
-
       {loadingDecks ? (
         <p>Loading decks...</p>
       ) : (
-        <>
+        <div className="flex gap-1">
           <select
             value={selectedDeck ?? ""}
             onChange={(e) => setSelectedDeck(Number(e.target.value))}
+            className="
+              rounded
+              px-2 
+              py-1.5
+              bg-[var(--surface)]" 
           >
             <option value="">Choose a deck...</option>
 
@@ -129,18 +132,33 @@ export default function GameLobby({
           <button
             onClick={handleSelectDeck}
             disabled={!selectedDeck || submittingDeck}
-            style={{ marginLeft: 8 }}
+            className="
+              rounded 
+              border 
+              px-2 
+              py-1 
+              bg-[var(--surface)] 
+              hover:bg-[var(--surface-light)] 
+              hover:border-[var(--accent)]"
           >
             {submittingDeck ? "Selecting..." : "Select Deck"}
           </button>
-        </>
+        </div>
       )}
 
-      <hr />
+      <hr className="my-2 max-w-[600px]"/>
 
       <button
         onClick={handleStartGame}
         disabled={startingGame}
+        className="
+          rounded 
+          border 
+          px-2 
+          py-1 
+          bg-[var(--surface)] 
+          hover:bg-[var(--surface-light)] 
+          hover:border-[var(--accent)]"
       >
         {startingGame ? "Starting..." : "Start Game"}
       </button>
