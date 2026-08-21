@@ -8,6 +8,8 @@ from app.game_engine.deck_service import load_deck
 from app.game_engine.serializers import serialize_card_instance, serialize_gamestate
 from ..database import get_session
 from ..schemas import (
+    GameLobbyListing,
+    GameLobbyList,
     GameStateOut,
     CreateGameRequest,
     JoinGameRequest,
@@ -70,19 +72,21 @@ router = APIRouter()
 
 # -------- Lobby actions ---------
 
-@router.get("/games", status_code=200)
+@router.get("/games", response_model=list[GameLobbyListing], status_code=200)
 async def list_games():
 
-    return [
-        {
-            "game_id": game.game_id,
-            "name": game.name,
-            "players": len(game.players),
-            "max_players": game.max_players,
-            "started": game.game_started,
-        }
-        for game in GAME_MANAGER.games.values()
-    ]
+    lobbies = []
+
+    for game in GAME_MANAGER.games.values():
+        lobbies.append(GameLobbyListing(
+            game_id = game.game_id,
+            game_name = game.name,
+            players = len(game.players),
+            max_players = game.max_players,
+            started = game.game_started,
+        ))
+
+    return lobbies
 
 @router.post("/games/create", status_code=201)
 async def create_game_route(req: CreateGameRequest):
@@ -119,7 +123,8 @@ async def select_deck(game_id: str, req : SelectDeckRequest, session = Depends(g
     except Exception:
         raise HTTPException(status_code=404, detail="Deck not found")
     
-    GAME_MANAGER.assign_deck(game_id, req.player_id, deck)
+    game = GAME_MANAGER.assign_deck(game_id, req.player_id, deck)
+    await CONNECTION_MANAGER.broadcast_gamestate(game)
 
     return{"status": "Deck Assigned"}
 

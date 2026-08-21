@@ -92,6 +92,16 @@ class DeckDetailResponse(BaseModel):
 
 # -------- Engine schemas --------
 
+class GameLobbyListing(BaseModel):
+    game_id: str
+    game_name: str
+    players: int
+    max_players: int
+    started: bool
+
+class GameLobbyList(BaseModel):
+    lobbies: list[GameLobbyListing] = Field(default_factory=list)
+
 class CardInstanceOut(BaseModel):
     instance_id: str
     owner_id: str
@@ -102,6 +112,8 @@ class CardInstanceOut(BaseModel):
 class PlayerStateOut(BaseModel):
     player_id: str
     name:str
+    deck_id:int | None = None
+    deck_name:str | None = None
 
     life: int = 20
     mana: dict[str, int] = Field(default_factory=lambda: {
@@ -130,6 +142,7 @@ class StackItemOut(BaseModel):
 
 class GameStateOut(BaseModel):
     game_id: str
+    game_name: str
     players: list[PlayerStateOut]
     game_started: bool
     turn_number: int

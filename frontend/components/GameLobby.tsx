@@ -1,8 +1,11 @@
 "use client"
 
+import Link from "next/link"
 import { useEffect, useState } from "react"
 import { getDecks, joinGame, selectDeck, startGame } from "@/lib/api"
+import JoinGameModal from "./JoinGameModal"
 import type { ProcessedGameState, Deck, SelectDeckRequest, JoinGameRequest } from "@/lib/types"
+
 
 type Props = {
   gameId: string
@@ -18,7 +21,6 @@ export default function GameLobby({
   const [decks, setDecks] = useState<Deck[]>([])
   const [selectedDeck, setSelectedDeck] = useState<number>()
   const [name, setName] = useState("")
-  const [joiningGame, setJoiningGame] = useState(false)
   const [loadingDecks, setLoadingDecks] = useState(true)
   const [submittingDeck, setSubmittingDeck] = useState(false)
   const [startingGame, setStartingGame] = useState(false)
@@ -39,19 +41,6 @@ export default function GameLobby({
 
     loadDecks()
   }, []);
-
-  // Send request to join game
-  async function handleJoinGame() {
-
-    setJoiningGame(true)
-    const req: JoinGameRequest = {player_id: playerId, name}
-    try {
-      await joinGame(gameId, req)
-    } finally {
-      setJoiningGame(false)
-    }
-  }
-
 
   // Send request to select deck
   async function handleSelectDeck() {
@@ -79,41 +68,44 @@ export default function GameLobby({
 
   return (
     <div style={{ padding: 24 }}>
-        <h1>Game Lobby</h1>
+        <h1 className="text-3xl font-bold mb-6">Game Lobby: {gameState.game_name}</h1>
+
+        <Link href="/games" className="block text-blue-600 hover:underline">
+          Return to list
+        </Link>
 
         <p>
             <strong>Game ID:</strong> {gameId}
         </p>
+        
+        <JoinGameModal gameId={gameId} playerId={playerId}/>
 
-        <h2>Players</h2>
+      <table className=" max-w-2xl border-collapse">
+        <thead>
+          <tr className="border border-[var(--surface-dark)] bg-[var(--surface-dark)]">
+            <th className="min-w-[155px] px-4 py-2 text-left">Player</th>
+            <th className="min-w-[155px] px-4 py-2 text-left">Deck</th>
+          </tr>
+        </thead>
 
-        <div style={{ marginBottom: 16 }}>
-            <input
-                type="text"
-                placeholder="Enter your name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                style={{ marginRight: 8 }}
-            />
-
-            <button
-                onClick={handleJoinGame}
-                disabled={!name || joiningGame}
+        <tbody>
+          {gameState.players.map((player) => (
+            <tr
+              key={player.player_id}
+              className="border border-[var(--surface-dark)]"
             >
-                {joiningGame ? "Joining..." : "Join Game"}
-            </button>
-        </div>
+              <td className="border border-[var(--surface-dark)] bg-[var(--surface-light)] px-4 py-2">
+                {player.name}
+                {player.player_id === playerId && " (You)"}
+              </td>
 
-      <ul>
-        {gameState.players.map((player) => (
-          <li key={player.player_id}>
-            {player.name}
-            {player.player_id === playerId && " (You)"}
-          </li>
-        ))}
-      </ul>
-
-      <hr />
+              <td className="border border-[var(--surface-dark)] bg-[var(--surface-light)] px-4 py-2">
+                {player.deck_name ?? "No deck selected"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
       <h2>Select Deck</h2>
 

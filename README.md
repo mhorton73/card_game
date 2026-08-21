@@ -75,3 +75,5 @@ You should now be able to open the frontend at http://localhost:3000.
 * The ordering of cards in decklists is also not organized, and is simply the order in which they were added to the deck. Adding a standardized ordering (and also optional orderings) would make deck building and editing much easier.
 
 * Decks are not currently tied to any user, as persistent user ID's are not yet implemented. I am still not decided firmly, but I think that in future, decks will have an associated user ID, but remain available to anyone, to help collaboration in deckbuilding and playtesting.
+
+* A chat feature for games would definitely help people without voice play, but as this is mostly intended for use between two people on voice chat, this feature is not a high priority.

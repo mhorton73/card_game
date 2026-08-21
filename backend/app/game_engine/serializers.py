@@ -24,6 +24,8 @@ def serialize_player_state(player: Player, viewer_id: str):
     return PlayerStateOut(
         player_id = player.player_id,
         name = player.name,
+        deck_id = player.deck_id,
+        deck_name = player.deck_name,
         life = player.life,
         mana = player.mana,
         deck_count= len(player.deck),
@@ -46,6 +48,7 @@ def serialize_stack_item(item: StackItem):
 def serialize_gamestate(game: Game, viewer_id: str):
     return GameStateOut(
         game_id = game.game_id,
+        game_name= game.name,
         players = [serialize_player_state(p, viewer_id) for p in game.players.values()],
         game_started = game.game_started,
         turn_number = game.turn_number,

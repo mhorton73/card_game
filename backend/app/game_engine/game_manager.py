@@ -1,7 +1,7 @@
 
 from .objects.game import Game
 from .objects.player import Player
-from .objects.card_instance import CardInstance
+from .deck_service import DeckInstance
 
 import os
 
@@ -38,14 +38,17 @@ class GameManager:
         game.add_player(player)
         return game
     
-    def assign_deck(self, game_id: str, player_id: str, deck: list[CardInstance]):
+    def assign_deck(self, game_id: str, player_id: str, deck: DeckInstance):
         if not self.game_exists(game_id):
             raise ValueError("Cannot find game") 
         game = self.get_game(game_id)
         player = game.players.get(player_id)
         if player is None:
             raise ValueError("Player not found")
-        player.deck = deck
+        player.deck_id = deck.deck_id
+        player.deck_name = deck.deck_name
+        player.deck = deck.deck_list
+        return game
 
     def start_game(self, game_id: str):
         if not self.game_exists(game_id):

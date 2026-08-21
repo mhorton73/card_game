@@ -83,7 +83,7 @@ export default function GamesPage() {
                 "
               >
                 <strong className="group-hover:text-[var(--text-muted)]">
-                  {game.name ?? game.game_id}
+                  {game.game_name ?? game.game_id}
                 </strong>
                 <div className="group-hover:text-[var(--text-muted)]">
                   {game.players}/{game.max_players} players

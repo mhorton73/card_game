@@ -44,6 +44,8 @@ export async function processPlayerState(player: PlayerStateOut): Promise<Proces
   return {
     player_id: player.player_id,
     name: player.name,
+    deck_id:player.deck_id,
+    deck_name:player.deck_name,
     life: player.life,
     mana: player.mana,
 
@@ -80,6 +82,7 @@ export async function processGameState(gameState: GameStateOut): Promise<Process
 
     return{
         game_id: gameState.game_id,
+        game_name: gameState.game_name,
         players,
         game_started: gameState.game_started,
         turn_number: gameState.turn_number,

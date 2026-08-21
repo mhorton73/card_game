@@ -7,6 +7,8 @@ from .card_instance import CardInstance
 class Player:
     player_id: str
     name:str
+    deck_id: int | None = None
+    deck_name: str | None = None
 
     life: int = 20
     mana: dict[str, int] = field(default_factory=lambda: {

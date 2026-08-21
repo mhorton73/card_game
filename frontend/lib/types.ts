@@ -103,6 +103,8 @@ export type CardInstancePackage ={
 export type PlayerStateOut = {
   player_id: string
   name: string
+  deck_id: number | null
+  deck_name: string | null
   life: number
   mana: Record<string, number>
 
@@ -121,6 +123,8 @@ export type PlayerStateOut = {
 export type ProcessedPlayerState = {
   player_id: string
   name: string
+  deck_id: number | null
+  deck_name: string | null
   life: number
   mana: Record<string, number>
 
@@ -148,6 +152,7 @@ export type ProcessedStackItem = {
 
 export type GameStateOut = {
   game_id: string
+  game_name: string
   players: PlayerStateOut[]
   game_started: boolean
   turn_number: number
@@ -156,6 +161,7 @@ export type GameStateOut = {
 
 export type ProcessedGameState = {
   game_id: string
+  game_name: string
   players: ProcessedPlayerState[]
   game_started: boolean
   turn_number: number
@@ -190,7 +196,7 @@ export type CardContext = {
 
 export type GameLobbyListing = {
   game_id: string
-  name: string
+  game_name: string
   players: number
   max_players: number
   started: boolean
