@@ -3,11 +3,6 @@ export type SetIn ={
   name: string
 }
 
-export type SetOut = {
-  id: number
-  name: string
-}
-
 export type CardSet = {
   id: number
   name: string

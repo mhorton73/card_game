@@ -1,6 +1,5 @@
 import Link from "next/link"
 import { getDecks} from "@/lib/api"
-import DeckFormModal from "@/components/DeckFormModal"
 import DeckPreview from "@/components/DeckPreview"
 import DeckDeleteButton from "@/components/DeckDeleteButton"
 import CreateFormModal from "@/components/CreateFormModal"
@@ -20,13 +19,14 @@ export default async function DecksPage() {
         {/* Create deck*/}
         <CreateFormModal type="deck"/>
 
-        <div className="mt-6 grid gap-4 max-w-[600px] mx-auto">
+        <div className="mt-6 grid grid-cols-[repeat(auto-fit,200px)] max-w-[1050px] gap-4">
           {data.decks.map((deck) => (
             <div
               key={deck.id}
-              className="border p-4 rounded flex justify-between items-center"
+              className="p-2 w-[200px] rounded flex flex-col justify-between items-center"
             >
-              <DeckPreview deck = {deck}/>
+              {/* Consider removing deck preview if it goes unused in game lobby*/}
+              <DeckPreview deck = {deck} />
 
               <div className="flex gap-3 text-sm">
                 <Link

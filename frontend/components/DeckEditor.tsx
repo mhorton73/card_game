@@ -105,7 +105,7 @@ export default function DeckEditor({ initialDeck, allCards }: Props) {
         
             <div className="flex gap-6">
                 {/* Left sidebar: Deck list */}
-                <div className="flex-[1] max-w-[20%]">
+                <div className="flex-[1] min-w-[300px] max-w-[20%]">
                 <DeckList 
                     cards={deck.cards} 
                     deckSize={deck.deck_size} 
@@ -115,21 +115,49 @@ export default function DeckEditor({ initialDeck, allCards }: Props) {
                 </div>
 
                 {/* Right main area: Card grid */}
-                <div className="flex-[4]">
+                <div className="min-w-0 flex-[4]">
                 <CardGrid 
                     cards={allCards}
                     renderActions={(card) => (
                         <div className="flex gap-2 mt-2">
                         <button
                             onClick={() => handleRemove(card.id)}
-                            className="border rounded px-2 py-1"
+                            className="
+                              w-8 
+                              h-8 
+                              flex 
+                              items-center 
+                              justify-center 
+                              text-sm 
+                              border 
+                              border-black
+                              rounded 
+                              bg-[var(--surface)]
+                              hover:bg-[var(--surface-light)]
+                              hover:border-[var(--accent)]
+                              text-red-600 
+                              leading-none"
                         >
                             -
                         </button>
                         
                         <button
                             onClick={() => handleAdd(card.id)}
-                            className="border rounded px-2 py-1"
+                            className="
+                              w-8 
+                              h-8 
+                              flex 
+                              items-center 
+                              justify-center 
+                              text-sm 
+                              border 
+                              border-black
+                              rounded 
+                              bg-[var(--surface)]
+                              hover:bg-[var(--surface-light)]
+                              hover:border-[var(--accent)]
+                              text-green-600 
+                              leading-none"
                         >
                             +
                         </button>

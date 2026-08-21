@@ -19,6 +19,7 @@ export default function CardComponent({ card }: Props) {
       hover:shadow-lg 
       transition-shadow 
       duration-200 
+      bg-[var(--surface-light)]
     "> 
       <h2 className="text-xl font-bold mb-1">{card.name}</h2>
 

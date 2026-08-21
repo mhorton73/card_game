@@ -78,7 +78,7 @@ export default function CardForm({ sets, initialData, cardId, method, successMes
       <div>
         <label className="block font-semibold">Name</label>
         <input
-          className="border rounded w-full p-2"
+          className="border rounded w-full p-2 bg-[var(--surface-light)]"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
@@ -88,7 +88,7 @@ export default function CardForm({ sets, initialData, cardId, method, successMes
       <div>
         <label className="block font-semibold">Cost</label>
         <input
-          className="border rounded w-full p-2"
+          className="border rounded w-full p-2 bg-[var(--surface-light)]"
           value={cost}
           onChange={(e) => setCost(e.target.value)}
         />
@@ -97,7 +97,7 @@ export default function CardForm({ sets, initialData, cardId, method, successMes
       <div>
         <label className="block font-semibold">Numerical Cost</label>
         <input
-          className="border rounded w-full p-2"
+          className="border rounded w-full p-2 bg-[var(--surface-light)]"
           value={numericalCost}
           onChange={(e) => setNumericalCost(e.target.value === "" ? "" : Number(e.target.value))}
         />
@@ -106,7 +106,7 @@ export default function CardForm({ sets, initialData, cardId, method, successMes
       <div>
         <label className="block font-semibold">Set</label>
         <select
-          className="border rounded w-full p-2"
+          className="border rounded w-full p-2 bg-[var(--surface-light)]"
           value={setId}
           onChange={(e) => setSetId(Number(e.target.value))}
         >
@@ -121,7 +121,7 @@ export default function CardForm({ sets, initialData, cardId, method, successMes
       <div>
         <label className="block font-semibold">Types (comma separated)</label>
         <input
-          className="border rounded w-full p-2"
+          className="border rounded w-full p-2 bg-[var(--surface-light)]"
           value={cardTypes.join(", ")}
           onChange={(e) =>
             setCardTypes(e.target.value.split(",").map((t) => t.trim()))
@@ -132,7 +132,7 @@ export default function CardForm({ sets, initialData, cardId, method, successMes
       <div>
         <label className="block font-semibold">Subtypes (comma separated)</label>
         <input
-          className="border rounded w-full p-2"
+          className="border rounded w-full p-2 bg-[var(--surface-light)]"
           value={subtypes.join(", ")}
           onChange={(e) =>
             setSubtypes(e.target.value.split(",").map((s) => s.trim()))
@@ -143,7 +143,7 @@ export default function CardForm({ sets, initialData, cardId, method, successMes
       <div>
         <label className="block font-semibold">Elements (comma separated)</label>
         <input
-          className="border rounded w-full p-2"
+          className="border rounded w-full p-2 bg-[var(--surface-light)]"
           value={element.join(", ")}
           onChange={(e) =>
             setElement(e.target.value.split(",").map((s) => s.trim()))
@@ -154,7 +154,7 @@ export default function CardForm({ sets, initialData, cardId, method, successMes
       <div>
         <label className="block font-semibold">Effect</label>
         <textarea
-          className="border rounded w-full p-2"
+          className="border rounded w-full p-2 bg-[var(--surface-light)]"
           value={effect}
           onChange={(e) => setEffect(e.target.value)}
         />
@@ -163,7 +163,7 @@ export default function CardForm({ sets, initialData, cardId, method, successMes
       <div>
         <label className="block font-semibold">Flavour Text</label>
         <textarea
-          className="border rounded w-full p-2"
+          className="border rounded w-full p-2 bg-[var(--surface-light)]"
           value={flavourText}
           onChange={(e) => setFlavourText(e.target.value)}
         />
@@ -174,7 +174,7 @@ export default function CardForm({ sets, initialData, cardId, method, successMes
           <label className="block font-semibold">Attack</label>
           <input
             type="number"
-            className="border rounded w-full p-2"
+            className="border rounded w-full p-2 bg-[var(--surface-light)]"
             value={attack}
             onChange={(e) => setAttack(e.target.value === "" ? "" : Number(e.target.value))}
           />
@@ -184,7 +184,7 @@ export default function CardForm({ sets, initialData, cardId, method, successMes
           <label className="block font-semibold">Health</label>
           <input
             type="number"
-            className="border rounded w-full p-2"
+            className="border rounded w-full p-2 bg-[var(--surface-light)]"
             value={health}
             onChange={(e) => setHealth(e.target.value === "" ? "" : Number(e.target.value))}
           />
@@ -195,7 +195,13 @@ export default function CardForm({ sets, initialData, cardId, method, successMes
 
       <button
         type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        className="
+          bg-[var(--surface)] 
+          px-4 
+          py-2 
+          rounded 
+          hover:bg-[var(--surface-dark)]
+          hover:text-[var(--text-muted)]"
         disabled={loading}
       >
         {loading ? "Saving..." : "Save Card"}

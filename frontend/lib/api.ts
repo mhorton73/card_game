@@ -1,6 +1,6 @@
 
 import { 
-  SetIn, SetOut,
+  SetIn, CardSet,
   SetListResponse,
   CardIn, Card,
   CardListResponse, 
@@ -58,12 +58,22 @@ async function callGameAction(url:string, body: unknown): Promise<void> {
 // Card Editor API calls
 
 export async function getSets(): Promise<SetListResponse> {
-  const res = await fetch(`${API_BASE}/sets`)
+  const res = await fetch(`${API_BASE}/sets`, {
+    cache: "no-store",
+  })
   if (!res.ok) throw new Error("Failed to fetch sets")
   return res.json()
 }
 
-export async function addSet(set: SetIn): Promise<SetOut> {
+export async function getSet(id:number): Promise<CardSet> {
+  const res = await fetch(`${API_BASE}/sets/${id}`, {
+    cache: "no-store",
+  })
+  if (!res.ok) throw new Error("Failed to fetch sets")
+  return res.json()
+}
+
+export async function addSet(set: SetIn): Promise<CardSet> {
   const res = await fetch(`${API_BASE}/sets`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -101,7 +111,9 @@ export async function getCards(setId?: number): Promise<CardListResponse> {
 }
 
 export async function getCard(cardId: number): Promise<Card> {
-  const res = await fetch(`${API_BASE}/cards/${cardId}`)
+  const res = await fetch(`${API_BASE}/cards/${cardId}`, {
+    cache: "no-store",
+  })
   return res.json()
 }
 
@@ -199,7 +211,9 @@ export async function removeDeckCardCopy(deckId: number, cardId: number): Promis
 }
 
 export async function getDeck(deckId:number): Promise<DeckDetail> {
-  const res = await fetch(`${API_BASE}/decks/${deckId}`)
+  const res = await fetch(`${API_BASE}/decks/${deckId}`, {
+    cache: "no-store",
+  })
   return res.json()
 }
 

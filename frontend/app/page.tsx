@@ -44,7 +44,8 @@ export default function Home() {
                 rounded-xl 
                 border 
                 bg-[var(--surface)] 
-                p-6 transition 
+                p-6 
+                transition 
                 hover:border-[var(--accent)]
               "
             >
@@ -52,7 +53,7 @@ export default function Home() {
                 {link.title}
               </h2>
 
-              <p className="mt-3">
+              <p className="mt-3 group-hover:text-[var(--text-muted)]">
                 {link.description}
               </p>
 

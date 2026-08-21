@@ -19,7 +19,7 @@ export default function DeckList({ cards, deckSize, onAdd, onRemove }: Props) {
 
   return (
     <div className="border rounded-lg overflow-hidden">
-      <div className="bg-gray-100 px-4 py-2 font-semibold text-sm">
+      <div className="bg-[var(--surface-dark)] px-4 py-2 font-semibold text-sm">
         Cards: ({deckSize})
       </div>
 
@@ -27,7 +27,7 @@ export default function DeckList({ cards, deckSize, onAdd, onRemove }: Props) {
         {cards.map((card) => (
           <li
             key={card.card_id}
-            className="flex items-center justify-between px-4 py-3 hover:bg-gray-50"
+            className="flex items-center justify-between px-4 py-3 hover:bg-[var(--surface)]"
           >
             {/* Card info */}
             <p className="font-medium truncate min-w-0">{card.card_name}</p>
@@ -42,7 +42,17 @@ export default function DeckList({ cards, deckSize, onAdd, onRemove }: Props) {
               {onRemove && (
                 <button
                   onClick={() => onRemove(card.card_id)}
-                  className="w-8 h-8 flex items-center justify-center text-sm border rounded hover:bg-red-50 text-red-600 leading-none"
+                  className="
+                    w-8 
+                    h-8 
+                    flex 
+                    items-center 
+                    justify-center 
+                    text-sm border 
+                    rounded 
+                    hover:bg-[var(--surface-light)] 
+                    text-red-600 
+                    leading-none"
                 >
                   −
                 </button>
@@ -51,7 +61,18 @@ export default function DeckList({ cards, deckSize, onAdd, onRemove }: Props) {
               {onAdd && (
                 <button
                   onClick={() => onAdd(card.card_id)}
-                  className="w-8 h-8 flex items-center justify-center text-sm border rounded hover:bg-green-50 text-green-600 leading-none"
+                  className="
+                    w-8 
+                    h-8 
+                    flex 
+                    items-center 
+                    justify-center 
+                    text-sm 
+                    border 
+                    rounded 
+                    hover:bg-[var(--surface-light)]
+                    text-green-600 
+                    leading-none"
                 >
                    +
                 </button>

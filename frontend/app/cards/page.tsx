@@ -15,7 +15,11 @@ export default async function CardsPage() {
           Homepage
         </Link>
 
-        <Link href="/cards/new?returnTo=/cards" className="text-blue-600 hover:underline">
+        <Link href={`/sets`} className="block text-blue-600 hover:underline">
+          Sets
+        </Link>
+
+        <Link href="/cards/new?returnTo=/cards" className="block text-blue-600 hover:underline">
           Create a New Card
         </Link>
 

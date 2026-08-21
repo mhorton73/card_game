@@ -50,7 +50,7 @@ export default function GamesPage() {
 
   return (
     <div style={{ padding: 24 }}>
-      <h1>Game Lobby</h1>
+      <h1 className="text-3xl font-bold mb-3">Game Lobbies</h1>
 
       <Link href="/" className="block text-blue-600 hover:underline">
         Homepage
@@ -58,24 +58,38 @@ export default function GamesPage() {
 
       <CreateFormModal type="game" onCreated={loadGames}/>
 
-      <hr />
+      <hr className="mb-2"/>
 
       {loading ? (
         <p>Loading games...</p>
       ) : games.length === 0 ? (
         <p>No games available</p>
       ) : (
-        <ul>
+        <ul className="space-y-2">
           {games.map((game) => (
-            <li key={game.game_id} style={{ marginBottom: 12 }}>
-              <Link href={`/games/${game.game_id}`}>
-                <strong>{game.name ?? game.game_id}</strong>
+            <li key={game.game_id}>
+              <Link 
+                href={`/games/${game.game_id}`} 
+                className="
+                  w-[250px]
+                  group
+                  block
+                  rounded-xl
+                  border
+                  bg-[var(--surface)] 
+                  p-2 
+                  transition 
+                  hover:border-[var(--accent)]
+                "
+              >
+                <strong className="group-hover:text-[var(--text-muted)]">
+                  {game.name ?? game.game_id}
+                </strong>
+                <div className="group-hover:text-[var(--text-muted)]">
+                  {game.players}/{game.max_players} players
+                  {game.started && " • In progress"}
+                </div>
               </Link>
-
-              <div>
-                {game.players}/{game.max_players} players
-                {game.started && " • In progress"}
-              </div>
             </li>
           ))}
         </ul>

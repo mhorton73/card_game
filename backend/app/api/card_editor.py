@@ -94,6 +94,15 @@ async def get_sets (session = Depends(get_session)):
 
     return SetListResponse(total = total, card_sets = set_list)
 
+@router.get("/sets/{id}", response_model=SetOut, status_code=200)
+async def get_set (id: int, session = Depends(get_session)):
+    
+    card_set = session.execute(select(CardSet).where(CardSet.id == id)).scalars().one_or_none()
+    if card_set is None:
+        raise HTTPException(status_code=404, detail="Set not found")
+
+    return serialize_card_set(card_set)
+
 @router.get("/cards", response_model=CardListResponse, status_code=200)
 async def get_cards (set_id: int | None = None, session = Depends(get_session)):
     
@@ -150,7 +159,7 @@ async def get_card (id: int, session = Depends(get_session)):
     ).scalars().one_or_none()
 
     if card is None:
-        raise HTTPException(status_code=404, detial="Card not found")
+        raise HTTPException(status_code=404, detail="Card not found")
 
     return serialize_card(card)
 
