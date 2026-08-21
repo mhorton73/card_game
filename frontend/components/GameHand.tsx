@@ -16,7 +16,7 @@ export default function Hand({
   actions
 }: HandProps) {
   return (
-    <div className="border rounded-lg p-2 bg-gray-50">
+    <div className="border rounded-lg p-2 bg-[var(--surface-dark)]">
       <h2 className="font-semibold mb-2">
         {"hand"} ({cards.length})
       </h2>
@@ -25,7 +25,6 @@ export default function Hand({
         {cards.map((c) => (
           <div
             key={c.instance.instance_id}
-            className="w-32"
           >
             <GameCard
               card={c.card}

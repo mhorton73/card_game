@@ -25,19 +25,19 @@ export default function GameZoneContents({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       
       <div 
-        className="relative max-h-[80vh] w-[80vw] overflow-y-auto rounded-lg bg-gray-900 p-6"
+        className="relative max-h-[80vh] w-[80vw] overflow-y-auto rounded-lg bg-[var(--surface-dark)] p-6"
         onClick={(event) => event.stopPropagation()}
       >
         
         {/* Header */}
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-white">
+          <h2 className="text-xl font-bold">
             {zoneName} ({cards.length})
           </h2>
 
           <button
             onClick={onClose}
-            className="rounded px-3 py-1 text-white hover:bg-gray-700"
+            className="rounded px-3 py-1 hover:bg-[var(--background)]"
           >
             X
           </button>

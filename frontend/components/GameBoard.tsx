@@ -16,10 +16,16 @@ export default function GameBoard({ gameState, playerId, actions }: Props) {
   const you = gameState.players.find(p => p.player_id === playerId)!
 
   return (
-    <div className="w-full h-screen flex flex-col bg-green-900">
+    <div className="w-full h-screen flex flex-col">
+      <div className="grid grid-cols-[150px_1fr] grid-rows-6 gap-4 p-2 mt-auto">
+        
+        {/* ================= OPPONENT SIDE ================= */}
 
-      {/* ================= OPPONENT SIDE ================= */}
-      <div className="flex flex-col gap-2 p-2">
+        <GameDeckZone
+          ownerId={opponent.player_id}
+          deckCount={opponent.deck_count}
+          actions={actions}
+        />
 
         <Zone 
           zoneName="catalysts" 
@@ -27,7 +33,14 @@ export default function GameBoard({ gameState, playerId, actions }: Props) {
           opponentId={you.player_id}
           cards={opponent.catalysts}
           actions = {actions}
-          flip 
+        />
+
+        <GameSideZone
+          zoneName={"graveyard"}
+          ownerId={opponent.player_id}
+          opponentId={you.player_id}
+          cards={opponent.graveyard}
+          actions = {actions}
         />
 
         <Zone 
@@ -36,7 +49,14 @@ export default function GameBoard({ gameState, playerId, actions }: Props) {
           opponentId={you.player_id} 
           cards={opponent.third_layer} 
           actions={actions}
-          flip 
+        />
+
+        <GameSideZone
+          zoneName={"exile"}
+          ownerId={opponent.player_id}
+          opponentId={you.player_id}
+          cards={opponent.exile}
+          actions = {actions}
         />
 
         <Zone 
@@ -45,16 +65,17 @@ export default function GameBoard({ gameState, playerId, actions }: Props) {
           opponentId={you.player_id} 
           cards={opponent.creatures} 
           actions = {actions}
-          flip 
         />
 
-      </div>
+        {/* ================= PLAYER SIDE ================= */}
 
-      {/* ================= CENTER STACK OVERLAY ================= */}
-      {/*<StackOverlay stack={state.stack} />*/}
-
-      {/* ================= PLAYER SIDE ================= */}
-      <div className="flex flex-col gap-2 p-2 mt-auto">
+        <GameSideZone
+          zoneName={"exile"}
+          ownerId={you.player_id}
+          opponentId={opponent.player_id}
+          cards={you.exile}
+          actions = {actions}
+        />
 
         <Zone 
           zoneName="creatures" 
@@ -64,12 +85,26 @@ export default function GameBoard({ gameState, playerId, actions }: Props) {
           actions={actions}
         />
 
+        <GameSideZone
+          zoneName={"graveyard"}
+          ownerId={you.player_id}
+          opponentId={opponent.player_id}
+          cards={you.graveyard}
+          actions = {actions}
+        />
+        
         <Zone 
           zoneName="third_layer"
           ownerId={you.player_id}
           opponentId={opponent.player_id} 
           actions={actions} 
           cards={you.third_layer} 
+        />
+
+        <GameDeckZone
+          ownerId={you.player_id}
+          deckCount={you.deck_count}
+          actions={actions}
         />
 
         <Zone 
@@ -80,6 +115,7 @@ export default function GameBoard({ gameState, playerId, actions }: Props) {
           cards={you.catalysts} 
         />
 
+      
       </div>
 
       {/* ================= HAND ================= */}
@@ -90,26 +126,7 @@ export default function GameBoard({ gameState, playerId, actions }: Props) {
         actions={actions}
       />
 
-      {/* ================= SIDE ZONES ================= */}
-      <GameDeckZone
-        ownerId={you.player_id}
-        deckCount={you.deck_count}
-        actions={actions}
-      />
-      <GameSideZone
-        zoneName={"graveyard"}
-        ownerId={you.player_id}
-        opponentId={opponent.player_id}
-        cards={you.graveyard}
-        actions = {actions}
-      />
-      <GameSideZone
-        zoneName={"exile"}
-        ownerId={you.player_id}
-        opponentId={opponent.player_id}
-        cards={you.exile}
-        actions = {actions}
-      />
+      
     </div>
   )
 }

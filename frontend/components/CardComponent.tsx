@@ -4,7 +4,7 @@ import { Card } from "@/lib/types"
 type Props = {
   card: Card
 }
-// w-[250px] for cards for the intended display size, idk ill fix it later
+// change to @container later and manage internal sizing with cqw or something 
 export default function CardComponent({ card }: Props) {
   return (
     <div className="

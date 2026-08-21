@@ -60,17 +60,17 @@ export default function GameDeckZone({
           className="
             flex
             aspect-[5/7]
-            w-32
+            w-[150px]
             items-center
             justify-center
             rounded-lg
             border-2
-            border-gray-500
-            bg-gray-800
+            
+            bg-[var(--surface-dark)]
             shadow-lg
           "
         >
-          <span className="text-lg font-bold text-gray-300">
+          <span className="text-lg font-bold">
             Deck
           </span>
         </div>
@@ -81,6 +81,7 @@ export default function GameDeckZone({
             absolute
             bottom-0
             left-full
+            z-50
             ml-2
             hidden
             min-w-32

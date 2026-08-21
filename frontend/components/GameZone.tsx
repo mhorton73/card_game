@@ -26,7 +26,7 @@ export default function Zone({
 }: ZoneProps) {
 
   return (
-    <div className="border rounded-lg p-2 bg-gray-50">
+    <div className="border rounded-lg p-2 bg-[var(--surface-dark)]">
       <h2 className="font-semibold mb-2">
         {zoneName} ({cards.length})
       </h2>
@@ -35,7 +35,7 @@ export default function Zone({
         {cards.map((c) => (
           <div
             key={c.instance.instance_id}
-            className={`w-32 ${flip ? "rotate-180" : ""}`}
+            className={`${flip ? "rotate-180" : ""}`}
           >
             <GameCard
               card={c.card}

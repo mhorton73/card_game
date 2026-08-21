@@ -29,7 +29,6 @@ export default function GameSideZone({
     <div className="relative w-32">
       {/* Zone */}
       <div className="group relative" onClick={() => {
-        console.log("side zone open button hit")
         setShowContents(true)
       }}>
 
@@ -38,17 +37,16 @@ export default function GameSideZone({
           className="
             flex
             aspect-[5/7]
-            w-32
+            w-[150px]
             items-center
             justify-center
             rounded-lg
             border-2
-            border-gray-500
-            bg-gray-800
+            bg-[var(--surface-dark)]
             shadow-lg
           "
         >
-          <span className="text-lg font-bold text-gray-300">
+          <span className="text-lg font-bold">
             {zoneName}
           </span>
         </div>
@@ -58,6 +56,7 @@ export default function GameSideZone({
             absolute
             bottom-0
             left-full
+            z-50
             ml-2
             hidden
             min-w-32
@@ -84,7 +83,6 @@ export default function GameSideZone({
             cards={cards}
             actions={actions}
             onClose={() => {
-                console.log("side zone close button hit")
                 setShowContents(false)
             }}
           />
