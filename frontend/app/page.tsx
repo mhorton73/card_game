@@ -30,10 +30,20 @@ export default function Home() {
           <p className="mx-auto mt-4 max-w-2xl text-lg">
             Welcome to my card game platform demo! Right now, everything is still pretty rough,
             but you can make cards and decks, then play with them (not automated, everything is manual,
-            so I recommend voice chat with your friend/s).
+            so I recommend voice chat with your friend/s). 
+            Below are the restricted fields for card creation:
+          </p>
+
+          <p className="mx-auto mt-4 max-w-2xl text-lg">
+            Currently allowed elements are Fire, Water, Earth, Air. 
+          </p>
+          <p className="mx-auto mt-4 max-w-2xl text-lg">
+            Currently allowed types are Catalyst, Creature, Spell, Invocation, Surge, Site. 
+          </p>
+          <p className="mx-auto mt-4 max-w-2xl text-lg">
+            Currently allowed subtypes are Dragon, Wolf, Golem, Resonant, Ghost.
           </p>
         </div>
-
         <div className="mt-12 grid gap-6 md:grid-cols-3">
           {links.map((link) => (
             <Link
